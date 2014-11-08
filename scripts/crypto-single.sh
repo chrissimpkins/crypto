@@ -5,7 +5,7 @@
 # MIT License
 
 if [ $# -eq 0 ]; then
-	echo "Error: The crypto-multi script did not receive a file path for encryption." 1>&2
+	echo "Error: The crypto-single script did not receive a file path for encryption." 1>&2
 	exit 1
 fi
 
