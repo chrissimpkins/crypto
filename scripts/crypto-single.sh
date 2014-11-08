@@ -1,11 +1,11 @@
 #!/bin/sh
-# crypto-multi.sh
-# Multiple file encryption with gpg
+# crypto-single.sh
+# Single file encryption with gpg
 # Copyright 2014 Christopher Simpkins
 # MIT License
 
 if [ $# -eq 0 ]; then
-	echo "Error: The crypto-multi script did not receive file paths for encryption." 1>&2
+	echo "Error: The crypto-multi script did not receive a file path for encryption." 1>&2
 	exit 1
 fi
 
@@ -20,14 +20,11 @@ if [ "$passphrase" != "$passphrase_confirm" ]; then
 	exit 1
 fi
 
-for file in "$@";
-do
 if [ -f "$file" ]; then
 	gpg --batch --force-mdc --cipher-algo AES256 -o ${file%%.*}.crypt --passphrase "$passphrase" --symmetric $file
 else
 	echo "'$file' does not appear to be a file and cannot be encrypted." >&2
 fi
-done;
 
 # remove the temporary passphrase variables
 unset passphrase
