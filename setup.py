@@ -29,7 +29,7 @@ def version_read():
 setup(
     name='crypto',
     version=version_read(),
-    description='',
+    description='An easy to use GPG interface for single or multiple symmetric file encryption',
     long_description=(docs_read('README.rst')),
     url='',
     license='MIT license',
