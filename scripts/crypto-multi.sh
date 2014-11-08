@@ -23,10 +23,16 @@ fi
 for file in "$@";
 do
 if [ -f "$file" ]; then
-	gpg --batch --force-mdc --cipher-algo AES256 -o ${file%%.*}.crypt --passphrase "$passphrase" --symmetric $file 
+	gpg --batch --force-mdc --cipher-algo AES256 -o ${file%%.*}.crypt --passphrase "$passphrase" --symmetric $file
 else
 	echo "'$file' does not appear to be a file and cannot be encrypted." >&2
 fi
 done;
+
+# remove the temporary passphrase variables
+unset passphrase
+unset passphrase_confirm
+
+
 echo "Encryption complete."
 exit 0
