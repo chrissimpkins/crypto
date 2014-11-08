@@ -5,7 +5,7 @@
 # MIT License
 
 if [ $# -eq 0 ]; then
-	echo "Error: The crypto-multi script failed to receive file names for encryption." 1>&2
+	echo "Error: The crypto-multi script did not receive file names for encryption." 1>&2
 	exit 1
 fi
 
@@ -32,7 +32,6 @@ done;
 # remove the temporary passphrase variables
 unset passphrase
 unset passphrase_confirm
-
 
 echo "Encryption complete."
 exit 0
