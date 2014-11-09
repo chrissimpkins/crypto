@@ -71,8 +71,40 @@ def main():
     #
     #------------------------------------------------------------------------------------------
     elif c.argc > 1:
-    # code for multi-file processing
-        pass
+    # code for multi-file processing and commands that include options
+        ascii_armored = False
+        if c.option('--armor') or c.option('-a'):
+        # ascii armored output switches
+            ascii_armored = True
+
+        path_list = [] # user entered paths from command line
+        directory_list = [] # directory paths included in the user entered paths from the command line
+        file_list = [] # file paths included in the user entered paths from the command line (and inside directories entered)
+
+        # determine if argument is an existing file or directory
+        for argument in c.argv:
+            if file_exists(argument):
+                file_list.append(argument) # if it is a file, add it to the file list
+            elif dir_exists(argument):
+                directory_list.append(argument)
+
+        # add all file paths from included directories to the file_list
+        if len(directory_list) > 0:
+            for directory in directory_list:
+                directory_file_list = list_all_files(directory)
+                for contained_file in directory_file_list:
+                    if contained_file[0] == "." or contained_file.endswith('.crypt'):
+                        pass # do nothing if it is a dot file or it is a previously encrypted file
+                    else:
+                        # otherwise add to the list for encryption
+                        contained_file_path = make_path(directory, contained_file)
+                        file_list.append(contained_file_path)
+
+        # file_list should contain all filepaths from either user specified file paths or contained in top level of directory, encrypt them
+        ## TODO: add encryption code
+        for x in file_list:
+            stdout(x)
+
     elif c.argc == 1:
     # simple single file or directory processing with default settings
         path = c.arg0
@@ -113,9 +145,9 @@ def main():
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
 
             if passphrase == passphrase_confirm:
-                # encrypt all of the files in the list
+                # encrypt all of the files in the directory
                 for filepath in directory_file_list:
-                    absolute_filepath = make_path(path, filepath)
+                    absolute_filepath = make_path(path, filepath) # combine the directory path and file name into absolute path
                     encrypted_filepath = filepath + '.crypt'
                     encrypted_filepath = make_path(path, encrypted_filepath) # combined original directory path with the file paths
                     system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + absolute_filepath
@@ -128,12 +160,9 @@ def main():
             else:
                 # passphrases do not match
                 stderr("The passphrases did not match.  Please enter your command again.")
-
         else:
             # error message, not a file or directory.  user entry error
             stderr("The path that you entered does not appear to be an existing file or directory.  Please try again.")
-
-
 
     #------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
