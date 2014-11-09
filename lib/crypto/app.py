@@ -25,9 +25,11 @@
 # Application start
 def main():
     import sys
+    import getpass
     from Naked.commandline import Command
+    from Naked.toolshed.shell import muterun
     from Naked.toolshed.state import StateObject
-    from Naked.toolshed.system import file_exists, dir_exists, stdout, stderr
+    from Naked.toolshed.system import dir_exists, directory, filename, file_exists, make_path, stdout, stderr
 
     #------------------------------------------------------------------------------------------
     # [ Instantiate command line object ]
@@ -76,7 +78,20 @@ def main():
         path = c.arg0
         if file_exists(path):
             # it is a file
-            stdout("File success")
+            passphrase = getpass.getpass("Please enter your passphrase: ")
+            passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
+            if passphrase == passphrase_confirm:
+                encrypted_filepath = path + '.crypt' # modify the encrypted filename with .crypt file suffix
+                system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + path
+                response = muterun(system_command)
+                if response.exitcode == 0:
+                    stdout(encrypted_filepath + " was generated")
+                    stdout("Encryption complete")
+                else:
+                    stderr(response.stderr, 0)
+                    stderr("Encryption failed")
+            else:
+                stderr("The passphrases did not match.  Please enter your command again.")
             pass
         elif dir_exists(path):
             # it is a directory
@@ -84,7 +99,7 @@ def main():
             pass
         else:
             # error message, not a file or directory.  user entry error
-            stdout("Failed")
+            stderr("The path that you entered does not appear to be an existing file or directory.  Please try again.")
 
 
 
