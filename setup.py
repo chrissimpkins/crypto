@@ -29,12 +29,12 @@ def version_read():
 setup(
     name='crypto',
     version=version_read(),
-    description='An easy to use GPG interface for single or multiple symmetric file encryption',
+    description='Simple symmetric GPG file encryption',
     long_description=(docs_read('README.rst')),
-    url='',
+    url='https://github.com/chrissimpkins/crypto',
     license='MIT license',
     author='Christopher Simpkins',
-    author_email='',
+    author_email='git.simpkins@gmail.com',
     platforms=['any'],
     entry_points = {
         'console_scripts': [
