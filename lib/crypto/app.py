@@ -29,7 +29,7 @@ def main():
     from Naked.commandline import Command
     from Naked.toolshed.shell import muterun
     from Naked.toolshed.state import StateObject
-    from Naked.toolshed.system import dir_exists, directory, filename, file_exists, make_path, stdout, stderr
+    from Naked.toolshed.system import dir_exists, directory, filename, file_exists, list_all_files, make_path, stdout, stderr
 
     #------------------------------------------------------------------------------------------
     # [ Instantiate command line object ]
@@ -77,13 +77,17 @@ def main():
     # simple single file or directory processing with default settings
         path = c.arg0
         if file_exists(path):
-            # it is a file
+        # it is a file, encrypt the single file with default settings
             passphrase = getpass.getpass("Please enter your passphrase: ")
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
             if passphrase == passphrase_confirm:
                 encrypted_filepath = path + '.crypt' # modify the encrypted filename with .crypt file suffix
                 system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + path
                 response = muterun(system_command)
+                # overwrite user entered passphrases
+                passphrase = ""
+                passphrase_confirm = ""
+                # check returned status code
                 if response.exitcode == 0:
                     stdout(encrypted_filepath + " was generated")
                     stdout("Encryption complete")
@@ -92,11 +96,39 @@ def main():
                     stderr("Encryption failed")
             else:
                 stderr("The passphrases did not match.  Please enter your command again.")
-            pass
         elif dir_exists(path):
-            # it is a directory
-            stdout("Dir success")
-            pass
+        # it is a directory, encrypt all top level files with default settings
+            directory_file_list = list_all_files(path)
+            # remove dot files and previously encrypted files (with .crypt suffix) from the list of directory files
+            count = 0
+            for x in directory_file_list:
+                if x[0] == '.' or x.endswith('.crypt'):
+                    del directory_file_list[count]
+                count += 1
+            # confirm that there are still files in the list after the dot files and encrypted files are removed
+            if len(directory_file_list) == 0:
+                stderr("There are no unencrypted files in the directory.")
+            #prompt for the passphrase
+            passphrase = getpass.getpass("Please enter your passphrase: ")
+            passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
+
+            if passphrase == passphrase_confirm:
+                # encrypt all of the files in the list
+                for filepath in directory_file_list:
+                    absolute_filepath = make_path(path, filepath)
+                    encrypted_filepath = filepath + '.crypt'
+                    encrypted_filepath = make_path(path, encrypted_filepath) # combined original directory path with the file paths
+                    system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + absolute_filepath
+                    response = muterun(system_command)
+                    if response.exitcode == 0:
+                        stdout(encrypted_filepath + " was generated")
+                    else:
+                        stderr(response.stderr, 0)
+                        stderr("Encryption failed for " + path, 0)
+            else:
+                # passphrases do not match
+                stderr("The passphrases did not match.  Please enter your command again.")
+
         else:
             # error message, not a file or directory.  user entry error
             stderr("The path that you entered does not appear to be an existing file or directory.  Please try again.")
