@@ -41,7 +41,7 @@ def main():
     #------------------------------------------------------------------------------
     state = StateObject()
     #------------------------------------------------------------------------------------------
-    # [ Command Suite Validation ] - early validation of appropriate command syntax
+    # [ VALIDATION LOGIC ] - early validation of appropriate command syntax
     # Test that user entered at least one argument to the executable, print usage if not
     #------------------------------------------------------------------------------------------
     if not c.command_suite_validates():
@@ -49,7 +49,7 @@ def main():
         print(crypto_usage)
         sys.exit(1)
     #------------------------------------------------------------------------------------------
-    # [ NAKED FRAMEWORK COMMANDS ]
+    # [ HELP, VERSION, USAGE LOGIC ]
     # Naked framework provides default help, usage, and version commands for all applications
     #   --> settings for user messages are assigned in the lib/crypto/settings.py file
     #------------------------------------------------------------------------------------------
@@ -67,14 +67,14 @@ def main():
         print(version_display_string)
         sys.exit(0)
     #------------------------------------------------------------------------------------------
-    # [ PRIMARY COMMAND LOGIC ]
+    # [ APPLICATION LOGIC ]
     #
     #------------------------------------------------------------------------------------------
     elif c.argc > 1:
     # code for multi-file processing and commands that include options
+        ## ASCII ARMOR SWITCH
         ascii_armored = False
         if c.option('--armor') or c.option('-a'):
-        # ascii armored output switches
             ascii_armored = True
 
         path_list = [] # user entered paths from command line
@@ -84,26 +84,60 @@ def main():
         # determine if argument is an existing file or directory
         for argument in c.argv:
             if file_exists(argument):
-                file_list.append(argument) # if it is a file, add it to the file list
+                file_list.append(argument) # if it is a file, add the path to the file_list
             elif dir_exists(argument):
-                directory_list.append(argument)
+                directory_list.append(argument) # if it is a directory, add path to the directory_list
 
-        # add all file paths from included directories to the file_list
+        # add all file paths from user specified directories to the file_list
+        contained_dot_file = False
+        contained_crypt_file = False
+
         if len(directory_list) > 0:
             for directory in directory_list:
                 directory_file_list = list_all_files(directory)
                 for contained_file in directory_file_list:
-                    if contained_file[0] == "." or contained_file.endswith('.crypt'):
-                        pass # do nothing if it is a dot file or it is a previously encrypted file
+                    if contained_file[0] == ".":
+                        contained_dot_file = True
+                    elif contained_file.endswith('.crypt'):
+                        contained_crypt_file = True
                     else:
                         # otherwise add to the list for encryption
                         contained_file_path = make_path(directory, contained_file)
                         file_list.append(contained_file_path)
 
+        # confirm that there are files to be encrypted, if not warn user
+        if len(file_list) == 0:
+            if contained_dot_file == True or contained_crypt_file == True:
+                stderr("There were no files identified for encryption.  crypto does not encrypt dot files or previously encrypted (i.e. .crypt) files")
+                sys.exit(1)
+            else:
+                stderr("Unable to identify the requested path(s) for encryption")
+                sys.exit(1)
+        else:
         # file_list should contain all filepaths from either user specified file paths or contained in top level of directory, encrypt them
-        ## TODO: add encryption code
-        for x in file_list:
-            stdout(x)
+            passphrase = getpass.getpass("Please enter your passphrase: ")
+            passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
+            if passphrase == passphrase_confirm:
+                for the_file in file_list:
+                    encrypted_filepath = the_file + '.crypt' # modify the encrypted filename with .crypt file suffix
+                    system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + the_file
+
+                    if ascii_armored == True: # add --armor switch to the command if indicated on the CL
+                        system_command = "gpg --batch --armor --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + the_file
+
+                    response = muterun(system_command)
+
+                    if response.exitcode == 0:
+                        stdout(encrypted_filepath + " was generated from " + the_file)
+                    else:
+                        stderr(response.stderr, 0)
+                        stderr("Encryption failed")
+                        sys.exit(1)
+
+                stdout("Encryption complete")
+            else:
+                stderr("The passphrases did not match.  Please enter your command again.")
+                sys.exit(1)
 
     elif c.argc == 1:
     # simple single file or directory processing with default settings
@@ -115,17 +149,19 @@ def main():
             if passphrase == passphrase_confirm:
                 encrypted_filepath = path + '.crypt' # modify the encrypted filename with .crypt file suffix
                 system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + path
+
                 response = muterun(system_command)
                 # overwrite user entered passphrases
                 passphrase = ""
                 passphrase_confirm = ""
                 # check returned status code
                 if response.exitcode == 0:
-                    stdout(encrypted_filepath + " was generated")
+                    stdout(encrypted_filepath + " was generated from " + path)
                     stdout("Encryption complete")
                 else:
                     stderr(response.stderr, 0)
                     stderr("Encryption failed")
+                    sys.exit(1)
             else:
                 stderr("The passphrases did not match.  Please enter your command again.")
         elif dir_exists(path):
@@ -140,6 +176,7 @@ def main():
             # confirm that there are still files in the list after the dot files and encrypted files are removed
             if len(directory_file_list) == 0:
                 stderr("There are no unencrypted files in the directory.")
+                sys.exit(1)
             #prompt for the passphrase
             passphrase = getpass.getpass("Please enter your passphrase: ")
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
@@ -153,16 +190,19 @@ def main():
                     system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + absolute_filepath
                     response = muterun(system_command)
                     if response.exitcode == 0:
-                        stdout(encrypted_filepath + " was generated")
+                        stdout(encrypted_filepath + " was generated from " + absolute_filepath)
                     else:
                         stderr(response.stderr, 0)
                         stderr("Encryption failed for " + path, 0)
+                        sys.exit(1)
             else:
                 # passphrases do not match
                 stderr("The passphrases did not match.  Please enter your command again.")
+                sys.exit(1)
         else:
             # error message, not a file or directory.  user entry error
             stderr("The path that you entered does not appear to be an existing file or directory.  Please try again.")
+            sys.exit(1)
 
     #------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
