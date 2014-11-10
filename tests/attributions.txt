@@ -1,0 +1,7 @@
+ATTRIBUTIONS
+
+testdir1/star.png : http://ellatutorials.deviantart.com/art/star-PNG-347446794
+testdir1/tiger.jpg : http://rs581.pbsrc.com/albums/ss252/sarge0946/Big%20Cats/tiger_181.jpg~c200
+testdir1/banana.gif : http://i.imgur.com/mZ9rekY.jpg
+
+
