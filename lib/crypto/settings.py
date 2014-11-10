@@ -24,12 +24,12 @@ debug = True
 usage = """
 Encrypt by explicit file path:
 ------------------------------
-  crypto [file path] <file path>
+  crypto [file path] <file path...>
 
 
 Encrypt by directory path:
 --------------------------
-  crypto [directory path] <directory path>
+  crypto [directory path] <directory path...>
 
 """
 
@@ -49,8 +49,8 @@ ABOUT
   crypto provides a simple interface to Gnu Privacy Guard (gpg) encryption for one or more files.  gpg must be installed on your system in order to use crypto.
 
 USAGE
-  crypto [file path] <file path>
-  crypto [directory path] <directory path>
+  crypto [file path] <file path...>
+  crypto [directory path] <directory path...>
 
 OPTIONS
    --armor | -a       Use a portable ASCII armored encryption format
