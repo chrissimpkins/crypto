@@ -97,9 +97,9 @@ def main():
                 directory_file_list = list_all_files(directory)
                 for contained_file in directory_file_list:
                     if contained_file[0] == ".":
-                        contained_dot_file = True
+                        contained_dot_file = True # change the flag + is not included in file_list intentionally (no dot files)
                     elif contained_file.endswith('.crypt'):
-                        contained_crypt_file = True
+                        contained_crypt_file = True # change the flag + is not included in file_list intentionally (no previously encrypted files)
                     else:
                         # otherwise add to the list for encryption
                         contained_file_path = make_path(directory, contained_file)
@@ -108,7 +108,7 @@ def main():
         # confirm that there are files to be encrypted, if not warn user
         if len(file_list) == 0:
             if contained_dot_file == True or contained_crypt_file == True:
-                stderr("There were no files identified for encryption.  crypto does not encrypt dot files or previously encrypted (i.e. .crypt) files")
+                stderr("There were no files identified for encryption.  crypto does not encrypt dot files or previously encrypted '.crypt' files.  Please change the filename(s) to encrypt these files.")
                 sys.exit(1)
             else:
                 stderr("Unable to identify the requested path(s) for encryption")
@@ -134,8 +134,15 @@ def main():
                         stderr("Encryption failed")
                         sys.exit(1)
 
+                # overwrite user entered passphrases
+                passphrase = ""
+                passphrase_confirm = ""
                 stdout("Encryption complete")
             else:
+                # passphrases did not match, report to user and abort
+                # overwrite user entered passphrases
+                passphrase = ""
+                passphrase_confirm = ""
                 stderr("The passphrases did not match.  Please enter your command again.")
                 sys.exit(1)
 
@@ -144,6 +151,11 @@ def main():
         path = c.arg0
         if file_exists(path):
         # it is a file, encrypt the single file with default settings
+            # confirm that it is not already encrypted, abort if so
+            if path.endswith('.crypt'):
+                stderr("You are attempting to encrypt an encrypted file.  Please delete the .crypt file and repeat encryption from the original file if this is your intent.")
+                sys.exit(1)
+            # if passes test above, obtain passphrase from the user
             passphrase = getpass.getpass("Please enter your passphrase: ")
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
             if passphrase == passphrase_confirm:
@@ -164,6 +176,7 @@ def main():
                     sys.exit(1)
             else:
                 stderr("The passphrases did not match.  Please enter your command again.")
+                sys.exit(1)
         elif dir_exists(path):
         # it is a directory, encrypt all top level files with default settings
             directory_file_list = list_all_files(path)
@@ -195,8 +208,15 @@ def main():
                         stderr(response.stderr, 0)
                         stderr("Encryption failed for " + path, 0)
                         sys.exit(1)
+
+                    # overwrite user entered passphrases
+                    passphrase = ""
+                    passphrase_confirm = ""
             else:
-                # passphrases do not match
+            # passphrases do not match
+                # overwrite user entered passphrases
+                passphrase = ""
+                passphrase_confirm = ""
                 stderr("The passphrases did not match.  Please enter your command again.")
                 sys.exit(1)
         else:
@@ -210,7 +230,7 @@ def main():
     #------------------------------------------------------------------------------------------
     else:
         print("Could not complete your request.  Please try again.")
-        sys.exit(1) #exit
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
