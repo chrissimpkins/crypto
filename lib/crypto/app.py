@@ -7,28 +7,13 @@
 # MIT license
 #------------------------------------------------------------------------------
 
-#------------------------------------------------------------------------------------
-# c.cmd = Primary command (crypto <primary command>)
-# c.cmd2 = Secondary command (crypto <primary command> <secondary command>)
-#
-# c.arg_to_cmd = first positional argument to the primary command
-# c.arg_to_cmd2 = first positional argument to the secondary command
-#
-# c.option(option_string, [bool argument_required]) = test for option with optional positional argument to option test
-# c.option_with_arg(option_string) = test for option and mandatory positional argument to option
-# c.flag(flag_string) = test for presence of a "option=argument" style flag
-#
-# c.arg(arg_string) = returns the next positional argument to the arg_string argument
-# c.flag_arg(flag_string) = returns the flag assignment for a "--option=argument" style flag
-#------------------------------------------------------------------------------------
-
 # Application start
 def main():
     import sys
     import getpass
     from Naked.commandline import Command
     from Naked.toolshed.shell import muterun
-    from Naked.toolshed.state import StateObject
+    #from Naked.toolshed.state import StateObject
     from Naked.toolshed.system import dir_exists, directory, filename, file_exists, list_all_files, make_path, stdout, stderr
 
     #------------------------------------------------------------------------------------------
@@ -39,7 +24,7 @@ def main():
     #------------------------------------------------------------------------------
     # [ Instantiate state object ]
     #------------------------------------------------------------------------------
-    state = StateObject()
+    # state = StateObject()
     #------------------------------------------------------------------------------------------
     # [ VALIDATION LOGIC ] - early validation of appropriate command syntax
     # Test that user entered at least one argument to the executable, print usage if not
@@ -84,6 +69,7 @@ def main():
         # determine if argument is an existing file or directory
         for argument in c.argv:
             if file_exists(argument):
+                ## TODO : do not add previously encrypted files
                 file_list.append(argument) # if it is a file, add the path to the file_list
             elif dir_exists(argument):
                 directory_list.append(argument) # if it is a directory, add path to the directory_list
@@ -153,7 +139,7 @@ def main():
         # it is a file, encrypt the single file with default settings
             # confirm that it is not already encrypted, abort if so
             if path.endswith('.crypt'):
-                stderr("You are attempting to encrypt an encrypted file.  Please delete the .crypt file and repeat encryption from the original file if this is your intent.")
+                stderr("You are attempting to encrypt an encrypted file.  Please delete the .crypt file and repeat encryption with the original file if this is your intent.")
                 sys.exit(1)
             # if passes test above, obtain passphrase from the user
             passphrase = getpass.getpass("Please enter your passphrase: ")
@@ -181,7 +167,7 @@ def main():
         # it is a directory, encrypt all top level files with default settings
             directory_file_list = list_all_files(path)
             # remove dot files and previously encrypted files (with .crypt suffix) from the list of directory files
-            count = 0
+            count = 0 # used as key for the list item deletion in for block below
             for x in directory_file_list:
                 if x[0] == '.' or x.endswith('.crypt'):
                     del directory_file_list[count]
@@ -209,9 +195,9 @@ def main():
                         stderr("Encryption failed for " + path, 0)
                         sys.exit(1)
 
-                    # overwrite user entered passphrases
-                    passphrase = ""
-                    passphrase_confirm = ""
+                # overwrite user entered passphrases
+                passphrase = ""
+                passphrase_confirm = ""
             else:
             # passphrases do not match
                 # overwrite user entered passphrases
