@@ -35,6 +35,14 @@ class CryptoDirectoryEncryptTest(unittest.TestCase):
         child.close()
         self.assertEqual(child.exitstatus, 1)
 
+    # ONLY DOTFILE AND CRYPT FILE TEST
+    def test_singledir_dotcryptfiles_only(self):
+        command = "crypto testdir4"
+        child = pexpect.spawn(command)
+        child.expect("There are no unencrypted files in the directory.")
+        child.close()
+        self.assertEqual(child.exitstatus, 1)
+
     # MISSING DIRECTORY TEST
     def test_singledir_missing_directory(self):
         command = "crypto completelybogusdir"
