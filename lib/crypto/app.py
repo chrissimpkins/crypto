@@ -168,10 +168,8 @@ def main():
             directory_file_list = list_all_files(path)
             # remove dot files and previously encrypted files (with .crypt suffix) from the list of directory files
             count = 0 # used as key for the list item deletion in for block below
-            for x in directory_file_list:
-                if x[0] == '.' or x.endswith('.crypt'):
-                    del directory_file_list[count]
-                count += 1
+            directory_file_list = [x for x in directory_file_list if x[0] != "." and x.endswith(".crypt") == False] # remove dotfiles and .crypt files
+
             # confirm that there are still files in the list after the dot files and encrypted files are removed
             if len(directory_file_list) == 0:
                 stderr("There are no unencrypted files in the directory.")
