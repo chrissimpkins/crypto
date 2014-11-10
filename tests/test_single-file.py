@@ -8,7 +8,7 @@ import pexpect
 from Naked.toolshed.shell import execute
 from Naked.toolshed.system import file_exists, make_path
 
-class CryptoSingleFileTest(unittest.TestCase):
+class CryptoSingleFileEncryptTest(unittest.TestCase):
 
     def setUp(self):
         pass
@@ -36,10 +36,12 @@ class CryptoSingleFileTest(unittest.TestCase):
         child.interact()
         return child
 
+
+
     # TESTS FOR EXISTING FILES
 
     # text file
-    def test_encrypt_single_txt(self):
+    def test_singlefile_encrypt_txt(self):
         command = "crypto testdir1/test1.txt"
         child = self.submit_same_passphrase(command)
         #stdout_string = child.logfile.getvalue()
@@ -51,7 +53,7 @@ class CryptoSingleFileTest(unittest.TestCase):
 
 
     # image file types
-    def test_encrypt_single_png(self):
+    def test_singlefile_encrypt_png(self):
         command = "crypto testdir1/star.png"
         child = self.submit_same_passphrase(command)
         self.assertTrue(file_exists(make_path("testdir1", "star.png.crypt")))
@@ -60,7 +62,7 @@ class CryptoSingleFileTest(unittest.TestCase):
         # cleanup
         os.remove(make_path("testdir1", "star.png.crypt"))
 
-    def test_encrypt_single_jpg(self):
+    def test_singlefile_encrypt_jpg(self):
         command = "crypto testdir1/tiger.jpg"
         child = self.submit_same_passphrase(command)
         self.assertTrue(file_exists(make_path("testdir1", "tiger.jpg.crypt")))
@@ -69,7 +71,7 @@ class CryptoSingleFileTest(unittest.TestCase):
         # cleanup
         os.remove(make_path("testdir1", "tiger.jpg.crypt"))
 
-    def test_encrypt_single_gif(self):
+    def test_singlefile_encrypt_gif(self):
         command = "crypto testdir1/banana.gif"
         child = self.submit_same_passphrase(command)
         self.assertTrue(file_exists(make_path("testdir1", "banana.gif.crypt")))
@@ -81,7 +83,7 @@ class CryptoSingleFileTest(unittest.TestCase):
 
 
     # private files (should succeed on this explicit call)
-    def test_encrypt_single_dotfile(self):
+    def test_singlefile_encrypt_dotfile(self):
         command = "crypto testdir1/.testfile"
         child = self.submit_same_passphrase(command)
         child.close()
@@ -93,7 +95,7 @@ class CryptoSingleFileTest(unittest.TestCase):
 
 
     # previously encrypted file (should fail)
-    def test_encrypt_single_cryptfile(self):
+    def test_singlefile_encrypt_cryptfile(self):
         command = "crypto testdir1/testcrypt.txt.crypt"
 
         # confirm error message and non-zero exit status code
@@ -104,7 +106,7 @@ class CryptoSingleFileTest(unittest.TestCase):
 
     # TESTS FOR NON-EXISTENT FILES
 
-    def test_encrypt_missing_file(self):
+    def test_singlefile_encrypt_missing_file(self):
         command = "crypto testdir1/bogusfile.txt"
 
         # confirm error message and non-zero exit status code
@@ -116,7 +118,7 @@ class CryptoSingleFileTest(unittest.TestCase):
 
     # TESTS FOR NON-MATCH ON PASSPHRASE
 
-    def test_encrypt_bad_passphrase(self):
+    def test_singlefile_encrypt_bad_passphrase(self):
         command = "crypto testdir1/test1.txt"
 
         # confirm non-zero exit status
