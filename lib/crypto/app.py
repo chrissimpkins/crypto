@@ -132,7 +132,7 @@ def main():
                 # overwrite user entered passphrases
                 passphrase = ""
                 passphrase_confirm = ""
-                stderr("The passphrases did not match.  Please enter your command again.")
+                stderr("The passphrases did not match. Please enter your command again.")
                 sys.exit(1)
 
     elif c.argc == 1:
