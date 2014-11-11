@@ -157,7 +157,7 @@ class CryptoASCIIFileEncryptTest(unittest.TestCase):
         child.sendline("test")
         child.expect("Please enter your passphrase again: ")
         child.sendline("bogus")
-        child.expect("The passphrases did not match.  Please enter your command again.")
+        child.expect("The passphrases did not match. Please enter your command again.")
         child.close()
         self.assertEqual(child.exitstatus, 1)
 
