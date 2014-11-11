@@ -66,18 +66,21 @@ def main():
         directory_list = [] # directory paths included in the user entered paths from the command line
         file_list = [] # file paths included in the user entered paths from the command line (and inside directories entered)
 
+        # dot and .crypt file flags for exclusion testing
+        contained_dot_file = False
+        contained_crypt_file = False
+
         # determine if argument is an existing file or directory
         for argument in c.argv:
             if file_exists(argument):
-                ## TODO : do not add previously encrypted files
-                file_list.append(argument) # if it is a file, add the path to the file_list
+                if argument.endswith('.crypt'): # do not include previously encrypted files
+                    contained_crypt_file = True
+                else:
+                    file_list.append(argument) # add appropriate file paths to the file_list
             elif dir_exists(argument):
                 directory_list.append(argument) # if it is a directory, add path to the directory_list
 
         # add all file paths from user specified directories to the file_list
-        contained_dot_file = False
-        contained_crypt_file = False
-
         if len(directory_list) > 0:
             for directory in directory_list:
                 directory_file_list = list_all_files(directory)
@@ -94,10 +97,10 @@ def main():
         # confirm that there are files to be encrypted, if not warn user
         if len(file_list) == 0:
             if contained_dot_file == True or contained_crypt_file == True:
-                stderr("There were no files identified for encryption.  crypto does not encrypt dot files or previously encrypted '.crypt' files.  Please change the filename(s) to encrypt these files.")
+                stderr("There were no files identified for encryption.  crypto does not encrypt dot files or previously encrypted '.crypt' files.")
                 sys.exit(1)
             else:
-                stderr("Unable to identify the requested path(s) for encryption")
+                stderr("Unable to identify files for encryption")
                 sys.exit(1)
         else:
         # file_list should contain all filepaths from either user specified file paths or contained in top level of directory, encrypt them
@@ -165,10 +168,10 @@ def main():
                 sys.exit(1)
         elif dir_exists(path):
         # it is a directory, encrypt all top level files with default settings
-            directory_file_list = list_all_files(path)
+            dirty_directory_file_list = list_all_files(path)
             # remove dot files and previously encrypted files (with .crypt suffix) from the list of directory files
             count = 0 # used as key for the list item deletion in for block below
-            directory_file_list = [x for x in directory_file_list if x[0] != "." and x.endswith(".crypt") == False] # remove dotfiles and .crypt files
+            directory_file_list = [x for x in dirty_directory_file_list if x[0] != "." and x.endswith(".crypt") == False] # remove dotfiles and .crypt files
 
             # confirm that there are still files in the list after the dot files and encrypted files are removed
             if len(directory_file_list) == 0:
