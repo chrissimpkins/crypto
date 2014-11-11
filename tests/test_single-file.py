@@ -89,7 +89,6 @@ class CryptoSingleFileEncryptTest(unittest.TestCase):
         child.close()
         self.assertTrue(file_exists(make_path("testdir1", ".testfile.crypt")))
 
-
         # cleanup
         os.remove(make_path("testdir1", ".testfile.crypt"))
 
