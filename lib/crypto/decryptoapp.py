@@ -61,7 +61,49 @@ def main():
 
     elif c.argc == 1:
     # simple single file or directory processing with default settings
-        stdout("single")
+        path = c.arg0
+        if file_exists(path):
+            check_existing_file = False # check for a file with the name of new decrypted filename in the directory
+
+            if path.endswith('.crypt'):
+                new_filename = path[0:-6] # remove the .crypt suffix
+                check_existing_file = True
+            elif path.endswith('.gpg') or path.endswith('.pgp') or path.endswith('.asc'):
+                new_filename = path[0:-4]
+                check_existing_file = True
+            else:
+                new_filename = path + ".decrypt" #if there is not a standard file type, then add a .decrypt suffix to the decrypted file name
+                stdout("Could not confirm that the requested file is encrypted based upon the file type.  Attempting decryption.  Keep your fingers crossed...")
+
+            # confirm that the decrypted path does not already exist, if so abort with warning message to user
+            if check_existing_file == True:
+                if file_exists(new_filename):
+                    stderr("Your file will be decrypted to '" + new_filename + "' and this file path already exists.  Please move the file or use the --overwrite option with your command if you intend to replace the current file.")
+                    sys.exit(1)
+
+            # get passphrase used to symmetrically encrypt the file
+            passphrase = getpass.getpass("Please enter your passphrase: ")
+            passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
+
+            # confirm that the passphrases match
+            if passphrase == passphrase_confirm:
+                system_command = "gpg --batch -o " + new_filename + " --passphrase " + passphrase + " -d " + path
+
+                response = muterun(system_command)
+                # overwrite user entered passphrases
+                passphrase = ""
+                passphrase_confirm = ""
+
+                if response.exitcode == 0:
+                    stdout("Decryption complete")
+                    sys.exit(0)
+                else:
+                    stderr(response.stderr, 0)
+                    stderr("Decryption failed")
+                    sys.exit(1)
+
+        elif dir_exists(path):
+            pass # TODO add decryption code - keep this explicit suffix requirement
 
     #------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
