@@ -38,7 +38,8 @@ setup(
     platforms=['any'],
     entry_points = {
         'console_scripts': [
-            'crypto = crypto.app:main'
+            'crypto = crypto.app:main',
+            'decrypto = crypto.decryptoapp:main'
         ],
     },
     scripts=['scripts/crypto-multi.sh', 'scripts/crypto-single.sh'],
