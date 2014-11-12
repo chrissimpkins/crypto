@@ -145,8 +145,9 @@ def main():
                 if not skip_file:
                     if use_standard_output:
                         system_command = "gpg --batch --passphrase " + passphrase + " -d " + encrypted_file
-                        exitcode = execute(system_command) # use naked execute function to directly push to stdout, rather than return stdout
-                        if exitcode != 0:
+                        successful_execution = execute(system_command) # use naked execute function to directly push to stdout, rather than return stdout
+
+                        if not successful_execution:
                             stderr("Unable to decrypt file '" + encrypted_file + "'", 0)
                             if created_tmp_files: # restore the moved tmp file to original if decrypt failed
                                 tmp_filename = decrypted_filename + '.tmp'
