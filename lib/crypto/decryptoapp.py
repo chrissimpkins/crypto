@@ -12,7 +12,7 @@ def main():
     import sys
     import getpass
     from Naked.commandline import Command
-    from Naked.toolshed.shell import muterun
+    from Naked.toolshed.shell import execute, muterun
     #from Naked.toolshed.state import StateObject
     from Naked.toolshed.system import dir_exists, directory, filename, file_exists, list_all_files, make_path, stdout, stderr
 
@@ -106,7 +106,7 @@ def main():
                         file_list.append(make_path(directory, contained_file))
 
 
-        # confirm that there are files for encryption
+        # confirm that there are files for encryption, if not abort
         if len(file_list) == 0:
             stderr("Could not identify files for encryption")
             sys.exit(1)
@@ -127,10 +127,11 @@ def main():
                 else:
                     decrypted_filename = encrypted_file + '.decrypt' # if it was a file without a known encrypted file type, add the .decrypt suffix
 
+                # determine whether file overwrite will take place with the decrypted file
                 skip_file = False # flag that indicates this file should not be encrypted
                 created_tmp_files = False
                 if file_exists(decrypted_filename):
-                    if use_file_overwrite: # rename the existing file to temp file which will be erased below
+                    if use_file_overwrite: # rename the existing file to temp file which will be erased or replaced (on decryption failures) below
                         tmp_filename = decrypted_filename + '.tmp'
                         os.rename(decrypted_filename, tmp_filename)
                         created_tmp_files = True
@@ -138,8 +139,43 @@ def main():
                         stdout("The file path '" + decrypted_filename + "' already exists.  This file was not decrypted.")
                         skip_file = True
 
-                # TODO: start decryption code
-                # NOTE: need to remove tmp file
+                # begin decryption
+                if not skip_file:
+                    if use_standard_output:
+                        system_command = "gpg --batch --passphrase " + passphrase + " -d " + encrypted_file
+                        exitcode = execute(system_command) # use naked execute function to directly push to stdout, rather than return stdout
+                        if exitcode != 0:
+                            stderr("Unable to decrypt file '" + encrypted_file + "'", 0)
+                            if created_tmp_files: # restore the moved tmp file to original if decrypt failed
+                                tmp_filename = decrypted_filename + '.tmp'
+                                if file_exists(tmp_filename):
+                                    os.rename(tmp_filename, decrypted_filename)
+                        else: # decryption successful but we are in stdout flag so do not include any other output from decrypto
+                            pass
+                    else:
+                        system_command = "gpg --batch -o " + decrypted_filename + " --passphrase " + passphrase + " -d " + encrypted_file
+                        response = muterun(system_command)
+
+                        if response.exitcode == 0:
+                            stdout("'" + encrypted_file + "' decrypted to '" + decrypted_filename + "'")
+                        else: # failed decryption
+                            if created_tmp_files:# restore the moved tmp file to original if decrypt failed
+                                tmp_filename = decrypted_filename + '.tmp'
+                                if file_exists(tmp_filename):
+                                    os.rename(tmp_filename, decrypted_filename)
+                            # report the error
+                            stderr(response.stderr)
+                            stderr("Decryption failed for " + encrypted_file)
+
+                # cleanup: remove the tmp file
+                if created_tmp_files:
+                    tmp_filename = decrypted_filename + '.tmp'
+                    if file_exists(tmp_filename):
+                        os.remove(tmp_filename)
+
+        # overwrite the entered passphrases
+        passphrase = ""
+        passphrase_confirm = ""
 
         else:
             # overwrite user entered passphrases
