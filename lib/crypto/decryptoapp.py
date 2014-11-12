@@ -133,18 +133,19 @@ def main():
                     else:
                         system_command = "gpg --batch -o " + decrypted_filepath + " --passphrase " + passphrase + " -d " + absolute_filepath
                         response = muterun(system_command)
-                        # overwrite user entered passphrases
-                        passphrase = ""
-                        passphrase_confirm = ""
 
                         if response.exitcode == 0:
-                            stdout("Decryption complete")
-                            sys.exit(0)
+                            stdout("'" + absolute_filepath + "' decrypted to '" + decrypted_filepath + "'")
                         else:
                             stderr(response.stderr)
-                            stderr("Decryption failed")
-                            sys.exit(1)
+                            stderr("Decryption failed for " + absolute_filepath)
+                # overwrite user entered passphrases
+                passphrase = ""
+                passphrase_confirm = ""
             else:
+                # overwrite user entered passphrases
+                passphrase = ""
+                passphrase_confirm = ""
                 stderr("The passphrases did not match.  Please enter your command again.")
                 sys.exit(1)
         else:
