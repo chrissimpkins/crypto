@@ -147,6 +147,10 @@ def main():
             else:
                 stderr("The passphrases did not match.  Please enter your command again.")
                 sys.exit(1)
+        else:
+            # error message, not a file or directory.  user entry error
+            stderr("The path that you entered does not appear to be an existing file or directory.  Please try again.")
+            sys.exit(1)
 
     #------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
