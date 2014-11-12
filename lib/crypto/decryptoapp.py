@@ -57,7 +57,96 @@ def main():
     #------------------------------------------------------------------------------------------
     elif c.argc > 1:
     # code for multi-file processing and commands that include options
-        pass
+        use_standard_output = False # print to stdout flag
+        use_file_overwrite = False # overwrite existing files
+
+        # set user option flags
+        if c.option('--stdout') or c.option('-s'):
+            use_standard_output = True
+        if c.option('--overwrite') or c.option('-o'):
+            use_file_overwrite = True
+
+        directory_list = [] # directory paths included in the user entered paths from the command line
+        file_list = [] # file paths included in the user entered paths from the command line (and inside directories entered)
+
+        for argument in c.argv:
+            if file_exists(argument): # user included a file, add it to the file_list for decryption
+                if argument.endswith('.crypt'):
+                    file_list.append(argument) # add .crypt files to the list of files for decryption
+                elif argument.endswith('.gpg'):
+                    file_list.append(argument)
+                elif argument.endswith('.asc'):
+                    file_list.append(argument)
+                elif argument.endswith('.pgp'):
+                    file_list.append(argument)
+                else:
+                    # cannot identify as an encrypted file, give it a shot anyways but warn user
+                    file_list.append(argument)
+                    stdout("Could not confirm that '" + argument + "' is encrypted based upon the file type.  Attempting decryption.  Keep your fingers crossed...")
+            elif dir_exists(argument): # user included a directory, add it to the directory_list
+                directory_list.append(argument)
+            else:
+                if argument[0] == "-":
+                    pass # if it is an option, do nothing
+                else:
+                    stdout("'" + argument + "' does not appear to be an existing file or directory.  Will not attempt decryption for this argument.")
+
+        # unroll the contained directory files into the file_list IF they are encrypted file types
+        if len(directory_list) > 0:
+            for directory in directory_list:
+                directory_file_list = list_all_files(directory)
+                for contained_file in directory_file_list:
+                    if contained_file.endswith('.crypt'):
+                        file_list.append(make_path(directory, contained_file)) # include the file with a filepath 'directory path/contained_file path'
+                    elif contained_file.endswith('.gpg'):
+                        file_list.append(make_path(directory, contained_file))
+                    elif contained_file.endswith('asc'):
+                        file_list.append(make_path(directory, contained_file))
+                    elif contained_file.endswith('.pgp'):
+                        file_list.append(make_path(directory, contained_file))
+
+
+        # confirm that there are files for encryption
+        if len(file_list) == 0:
+            stderr("Could not identify files for encryption")
+            sys.exit(1)
+
+        # get passphrase used to symmetrically decrypt the file
+        passphrase = getpass.getpass("Please enter your passphrase: ")
+        passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
+
+        if passphrase == passphrase_confirm:
+            # begin decryption of each requested file.  the directory path was already added to the file path above
+            for encrypted_file in file_list:
+                # create the decrypted file name
+                decrypted_filename = ""
+                if encrypted_file.endswith('.crypt'):
+                    decrypted_filename = encrypted_file[0:-6]
+                elif encrypted_file.endswith('.gpg') or encrypted_file.endswith('.asc') or encrypted_file.endswith('.pgp'):
+                    decrypted_filename = encrypted_file[0:-4]
+                else:
+                    decrypted_filename = encrypted_file + '.decrypt' # if it was a file without a known encrypted file type, add the .decrypt suffix
+
+                skip_file = False # flag that indicates this file should not be encrypted
+                created_tmp_files = False
+                if file_exists(decrypted_filename):
+                    if use_file_overwrite: # rename the existing file to temp file which will be erased below
+                        tmp_filename = decrypted_filename + '.tmp'
+                        os.rename(decrypted_filename, tmp_filename)
+                        created_tmp_files = True
+                    else:
+                        stdout("The file path '" + decrypted_filename + "' already exists.  This file was not decrypted.")
+                        skip_file = True
+
+                # TODO: start decryption code
+                # NOTE: need to remove tmp file
+
+        else:
+            # overwrite user entered passphrases
+            passphrase = ""
+            passphrase_confirm = ""
+            stderr("The passphrases did not match.  Please enter your command again.")
+            sys.exit(1)
 
     elif c.argc == 1:
     # simple single file or directory processing with default settings
@@ -81,7 +170,7 @@ def main():
                     stderr("Your file will be decrypted to '" + new_filename + "' and this file path already exists.  Please move the file or use the --overwrite option with your command if you intend to replace the current file.")
                     sys.exit(1)
 
-            # get passphrase used to symmetrically encrypt the file
+            # get passphrase used to symmetrically decrypt the file
             passphrase = getpass.getpass("Please enter your passphrase: ")
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
 
