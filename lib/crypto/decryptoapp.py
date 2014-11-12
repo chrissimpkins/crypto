@@ -143,8 +143,8 @@ def main():
 
                 # begin decryption
                 if not skip_file:
-                    if use_standard_output:
-                        system_command = "gpg --batch --passphrase " + passphrase + " -d " + encrypted_file
+                    if use_standard_output: # using --quiet flag to suppress stdout messages from gpg, just want the file data in stdout stream
+                        system_command = "gpg --batch --quiet --passphrase " + passphrase + " -d " + encrypted_file
                         successful_execution = execute(system_command) # use naked execute function to directly push to stdout, rather than return stdout
 
                         if not successful_execution:
@@ -176,11 +176,11 @@ def main():
                     if file_exists(tmp_filename):
                         os.remove(tmp_filename)
 
-            # overwrite the entered passphrases
+            # overwrite the entered passphrases after file decryption is complete
             passphrase = ""
             passphrase_confirm = ""
 
-        else:# overwrite user entered passphrases
+        else: # passphrases did not match
             passphrase = ""
             passphrase_confirm = ""
             stderr("The passphrases did not match.  Please enter your command again.")
