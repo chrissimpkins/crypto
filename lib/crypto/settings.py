@@ -10,7 +10,7 @@ app_name = 'crypto'
 # Version Number
 #------------------------------------------------------------------------------
 major_version = "0"
-minor_version = "1"
+minor_version = "2"
 patch_version = "0"
 
 #------------------------------------------------------------------------------
@@ -27,9 +27,19 @@ Encrypt by explicit file path:
   crypto [file path] <file path...>
 
 
-Encrypt by directory path:
---------------------------
+Encrypt all top level files in directory:
+-----------------------------------------
   crypto [directory path] <directory path...>
+
+
+Decrypt by explicit file path:
+------------------------------
+  decrypto [file path] <file path...>
+
+
+Decrypt all top level encrypted files in directory:
+---------------------------------------------------
+  decrypto [directory path] <directory path...>
 
 """
 
@@ -46,17 +56,26 @@ https://github.com/chrissimpkins/crypto
 ---------------------------------------
 
 ABOUT
-  crypto provides a simple interface to Gnu Privacy Guard (gpg) encryption for one or more files.  gpg must be installed on your system in order to use crypto.
+crypto provides a simple interface to Gnu Privacy Guard (gpg) encryption for one or more files.  gpg must be installed on your system in order to use crypto.
 
 USAGE
-  crypto [file path] <file path...>
-  crypto [directory path] <directory path...>
+  ENCRYPTION
+    crypto [file path] <file path...>
+    crypto [directory path] <directory path...>
 
-OPTIONS
+  DECRYPTION
+    decrypto [file path] <file path...>
+    decrypto [directory path] <directory path...>
+
+CRYPTO OPTIONS
    --armor | -a       Use a portable ASCII armored encryption format
 
-DESCRIPTION
-  Use one or more explicit file paths to encrypt the file(s).  Use one or more directory arguments to encrypt all files in the top level of the directory with the same passphrase.  Encrypted files are named '<filename>.crypt' and will be located in the same directory as the original file.  crypto does not remove or otherwise modify the original file.
+DECRYPTO OPTIONS
+   --overwrite | -o      Overwrite an existing file with the decrypted file
+   --stdout    | -s      Print the contents of the file to the standard output stream
 
-  Encryption is performed with the AES256 cipher algorithm.
+DESCRIPTION
+Use one or more explicit file path arguments to encrypt or decrypt the file(s).  Use one or more directory arguments to encrypt all files in the top level of the directory with the same passphrase or decrypt all .crypt files in the top level of the directory.  Encrypted files are named '<filename>.crypt' and will be located in the same directory as the original file.  crypto does not remove or otherwise modify the original file.
+
+Encryption is performed with the AES256 cipher algorithm.
 """
