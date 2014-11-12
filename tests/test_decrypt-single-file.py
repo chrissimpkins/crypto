@@ -26,7 +26,6 @@ class CryptoSingleFileDecryptTest(unittest.TestCase):
         return child
 
 
-
     # .crypt file decryption test
     def test_decrypt_singlefile_cryptfile(self):
         command = "decrypto testdir5/test1.txt.crypt"
