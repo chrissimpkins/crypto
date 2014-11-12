@@ -9,6 +9,7 @@
 
 # Application start
 def main():
+    import os
     import sys
     import getpass
     from Naked.commandline import Command
@@ -130,14 +131,15 @@ def main():
                 # determine whether file overwrite will take place with the decrypted file
                 skip_file = False # flag that indicates this file should not be encrypted
                 created_tmp_files = False
-                if file_exists(decrypted_filename):
-                    if use_file_overwrite: # rename the existing file to temp file which will be erased or replaced (on decryption failures) below
-                        tmp_filename = decrypted_filename + '.tmp'
-                        os.rename(decrypted_filename, tmp_filename)
-                        created_tmp_files = True
-                    else:
-                        stdout("The file path '" + decrypted_filename + "' already exists.  This file was not decrypted.")
-                        skip_file = True
+                if not use_standard_output: # if not writing a file, no need to check for overwrite
+                    if file_exists(decrypted_filename):
+                        if use_file_overwrite: # rename the existing file to temp file which will be erased or replaced (on decryption failures) below
+                            tmp_filename = decrypted_filename + '.tmp'
+                            os.rename(decrypted_filename, tmp_filename)
+                            created_tmp_files = True
+                        else:
+                            stdout("The file path '" + decrypted_filename + "' already exists.  This file was not decrypted.")
+                            skip_file = True
 
                 # begin decryption
                 if not skip_file:
@@ -173,12 +175,11 @@ def main():
                     if file_exists(tmp_filename):
                         os.remove(tmp_filename)
 
-        # overwrite the entered passphrases
-        passphrase = ""
-        passphrase_confirm = ""
+            # overwrite the entered passphrases
+            passphrase = ""
+            passphrase_confirm = ""
 
-        else:
-            # overwrite user entered passphrases
+        else:# overwrite user entered passphrases
             passphrase = ""
             passphrase_confirm = ""
             stderr("The passphrases did not match.  Please enter your command again.")
