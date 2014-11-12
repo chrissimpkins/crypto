@@ -26,6 +26,7 @@ class CryptoSingleFileDecryptTest(unittest.TestCase):
         return child
 
 
+## SINGLE ARGUMENT CODE BLOCK TESTS
     # .crypt file decryption test
     def test_decrypt_singlefile_cryptfile(self):
         command = "decrypto testdir5/test1.txt.crypt"
@@ -98,6 +99,107 @@ class CryptoSingleFileDecryptTest(unittest.TestCase):
         child.expect("The passphrases did not match.  Please enter your command again.")
         child.close()
         self.assertEqual(child.exitstatus, 1)
+
+
+## MULTIPLE ARGUMENT CODEBLOCK TESTS
+ # tests for single file decryption that includes command line options
+
+    # file overwrite .crypt file long flag test
+    def test_decrypt_singlecryptfile_overwrite_longflag(self):
+        command = "decrypto --overwrite testdir6/test1.txt.crypt"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("'testdir6/test1.txt.crypt' decrypted to 'testdir6/test1.txt'")
+        child.close()
+        self.assertTrue(file_exists(make_path("testdir6", "test1.txt"))) # confirm decrypted file present
+        self.assertFalse(file_exists(make_path("testdir6", "test1.txt.tmp"))) # confirm tmp file erased
+
+    # file overwrite .gpg file long flag test
+    def test_decrypt_singlegpgfile_overwrite_longflag(self):
+        command = "decrypto --overwrite testdir6/test2.txt.gpg"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("'testdir6/test2.txt.gpg' decrypted to 'testdir6/test2.txt'")
+        child.close()
+        self.assertTrue(file_exists(make_path("testdir6", "test2.txt"))) # confirm decrypted file present
+        self.assertFalse(file_exists(make_path("testdir6", "test2.txt.tmp"))) # confirm tmp file erased
+
+    # file overwrite .crypt file short flag test
+    def test_decrypt_singlecryptfile_overwrite_shortflag(self):
+        command = "decrypto -o testdir6/test1.txt.crypt"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("'testdir6/test1.txt.crypt' decrypted to 'testdir6/test1.txt'")
+        child.close()
+        self.assertTrue(file_exists(make_path("testdir6", "test1.txt"))) # confirm decrypted file present
+        self.assertFalse(file_exists(make_path("testdir6", "test1.txt.tmp"))) # confirm tmp file erased
+
+    # file overwrite .gpg file short flag test
+    def test_decrypt_singlegpgfile_overwrite_shortflag(self):
+        command = "decrypto -o testdir6/test2.txt.gpg"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("'testdir6/test2.txt.gpg' decrypted to 'testdir6/test2.txt'")
+        child.close()
+        self.assertTrue(file_exists(make_path("testdir6", "test2.txt"))) # confirm decrypted file present
+        self.assertFalse(file_exists(make_path("testdir6", "test2.txt.tmp"))) # confirm tmp file erased
+
+    # stdout long flag test with .crypt file
+    def test_decrypt_singlefile_stdoutcrypt_longflag(self):
+        command = "decrypto --stdout testdir6/test1.txt.crypt"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("single line of text from test1.txt")
+        child.close()
+
+    # stdout long flag test with .gpg file
+    def test_decrypt_singlefile_stdoutgpg_longflag(self):
+        command = "decrypto --stdout testdir6/test2.txt.gpg"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("single line of text from test2.txt")
+        child.close()
+
+    # stdout short flag test with .crypt file
+    def test_decrypt_singlefile_stdoutcrypt_longflag(self):
+        command = "decrypto -s testdir6/test1.txt.crypt"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("single line of text from test1.txt")
+        child.close()
+
+    # stdout short flag test with .gpg file
+    def test_decrypt_singlefile_stdoutgpg_longflag(self):
+        command = "decrypto -s testdir6/test2.txt.gpg"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("single line of text from test2.txt")
+        child.close()
+
 
 
 
