@@ -56,7 +56,7 @@ https://github.com/chrissimpkins/crypto
 ---------------------------------------
 
 ABOUT
-crypto provides a simple interface to Gnu Privacy Guard (gpg) encryption for one or more files.  gpg must be installed on your system in order to use crypto.
+crypto provides a simple interface to Gnu Privacy Guard (gpg) encryption and decryption for one or more files.  gpg must be installed on your system in order to use the crypto and decrypto executables.
 
 USAGE
   ENCRYPTION
@@ -68,14 +68,18 @@ USAGE
     decrypto [directory path] <directory path...>
 
 CRYPTO OPTIONS
-   --armor | -a       Use a portable ASCII armored encryption format
+   --armor | -a          Use a portable ASCII armored encryption format
 
 DECRYPTO OPTIONS
    --overwrite | -o      Overwrite an existing file with the decrypted file
-   --stdout    | -s      Print the contents of the file to the standard output stream
+   --stdout    | -s      Print file contents to the standard output stream
 
 DESCRIPTION
-Use one or more explicit file path arguments to encrypt or decrypt the file(s).  Use one or more directory arguments to encrypt all files in the top level of the directory with the same passphrase or decrypt all .crypt files in the top level of the directory.  Encrypted files are named '<filename>.crypt' and will be located in the same directory as the original file.  crypto does not remove or otherwise modify the original file.
+Use one or more explicit file path arguments to encrypt or decrypt the file(s).  crypto and decrypto will attempt to encrypt or decrypt (respectively) any explicit filepaths that you include irrespective of the file type.  Encrypted files are generated on the path '<original_filepath>.crypt'.  The original file is not modified or removed by crypto.
 
-Encryption is performed with the AES256 cipher algorithm.
+Use one or more directory arguments with the crypto executable to encrypt all files in the top level of each directory with the same passphrase. Previously encrypted files with a '.crypt' file type will not be generated again in a directory.  Remove them before you run the command if you intend to repeat encryption with a file.
+
+Use one or more directory arguments with decrypto to decrypt all .crypt, .gpg, .asc, and .pgp files in the top level of each directory.
+
+Encryption is performed with the AES256 cipher algorithm.  Decryption is supported for any cipher algorithm that your version of gpg supports.
 """
