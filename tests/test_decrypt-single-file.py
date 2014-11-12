@@ -190,7 +190,7 @@ class CryptoSingleFileDecryptTest(unittest.TestCase):
         child.close()
 
     # stdout short flag test with .gpg file
-    def test_decrypt_singlefile_stdoutgpg_longflag(self):
+    def test_decrypt_singlefile_stdoutgpg_shortflag(self):
         command = "decrypto -s testdir6/test2.txt.gpg"
         child = pexpect.spawn(command)
         child.expect("Please enter your passphrase: ")
@@ -200,6 +200,17 @@ class CryptoSingleFileDecryptTest(unittest.TestCase):
         child.expect("single line of text from test2.txt")
         child.close()
 
+    # mismatched passphrase test
+    def test_decrypt_singlefile_stdoutgpg_badpassphrase(self):
+        command = "decrypto -s testdir6/test2.txt.gpg"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("bogus")
+        child.expect("The passphrases did not match.  Please enter your command again.")
+        child.close()
+        self.assertEqual(child.exitstatus, 1)
 
 
 
