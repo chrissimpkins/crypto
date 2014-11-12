@@ -57,12 +57,12 @@ def main():
     #------------------------------------------------------------------------------------------
     elif c.argc > 1:
     # code for multi-file processing and commands that include options
-        stdout("multi")
+        pass
 
     elif c.argc == 1:
     # simple single file or directory processing with default settings
         path = c.arg0
-        if file_exists(path):
+        if file_exists(path): ## SINGLE FILE
             check_existing_file = False # check for a file with the name of new decrypted filename in the directory
 
             if path.endswith('.crypt'):
@@ -88,7 +88,6 @@ def main():
             # confirm that the passphrases match
             if passphrase == passphrase_confirm:
                 system_command = "gpg --batch -o " + new_filename + " --passphrase " + passphrase + " -d " + path
-
                 response = muterun(system_command)
                 # overwrite user entered passphrases
                 passphrase = ""
@@ -101,9 +100,53 @@ def main():
                     stderr(response.stderr, 0)
                     stderr("Decryption failed")
                     sys.exit(1)
+            else:
+                stderr("The passphrases did not match.  Please enter your command again.")
+                sys.exit(1)
+        elif dir_exists(path):  ## SINGLE DIRECTORY
+            dirty_directory_file_list = list_all_files(path)
+            directory_file_list = [x for x in dirty_directory_file_list if (x.endswith('.crypt') or x.endswith('.gpg') or x.endswith('.pgp') or x.endswith('.asc'))]
 
-        elif dir_exists(path):
-            pass # TODO add decryption code - keep this explicit suffix requirement
+            # if there are no encrypted files found, warn and abort
+            if len(directory_file_list) == 0:
+                stderr("There are no encrypted files in the directory")
+                sys.exit(1)
+
+            #prompt for the passphrase
+            passphrase = getpass.getpass("Please enter your passphrase: ")
+            passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
+
+            if passphrase == passphrase_confirm:
+                # decrypt all of the encypted files in the directory
+                for filepath in directory_file_list:
+                    absolute_filepath = make_path(path, filepath) # combine the directory path and file name into absolute path
+
+                    # remove file suffix from the decrypted file path that writes to disk
+                    if absolute_filepath.endswith('.crypt'):
+                        decrypted_filepath = absolute_filepath[0:-6] # remove the .crypt suffix
+                    elif absolute_filepath.endswith('.gpg') or absolute_filepath.endswith('.pgp') or absolute_filepath.endswith('.asc'):
+                        decrypted_filepath = absolute_filepath[0:-4]
+
+                    # confirm that the file does not already exist
+                    if file_exists(decrypted_filepath):
+                        stdout("The file path '" + decrypted_filepath + "' already exists.  This file was not decrypted.")
+                    else:
+                        system_command = "gpg --batch -o " + decrypted_filepath + " --passphrase " + passphrase + " -d " + absolute_filepath
+                        response = muterun(system_command)
+                        # overwrite user entered passphrases
+                        passphrase = ""
+                        passphrase_confirm = ""
+
+                        if response.exitcode == 0:
+                            stdout("Decryption complete")
+                            sys.exit(0)
+                        else:
+                            stderr(response.stderr)
+                            stderr("Decryption failed")
+                            sys.exit(1)
+            else:
+                stderr("The passphrases did not match.  Please enter your command again.")
+                sys.exit(1)
 
     #------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
