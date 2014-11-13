@@ -1,4 +1,4 @@
-# crypto
+# crypto  [![PyPI version](https://badge.fury.io/py/crypto.png)](https://pypi.python.org/pypi/crypto)
 
 ## Simple symmetric GPG file encryption and decryption
 
