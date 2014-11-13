@@ -5,8 +5,6 @@
 ## About
 crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm.
 
-Tested in Python 2.7, 3.4, and pypy.
-
 ## Quickstart
 
 #### Encrypt a File
