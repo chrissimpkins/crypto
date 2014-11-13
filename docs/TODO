@@ -1,0 +1,5 @@
+TODO:
+
+- support wildcard file search - works with `decrypto -s *.(crypt|gpg)` and `decrypto -s *.crypt` - needs testing
+
+- support multi-part encrypted files with local encrypted compiler (.shard)
