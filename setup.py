@@ -51,6 +51,7 @@ setup(
         'Intended Audience :: End Users/Desktop',
         'Topic :: Security :: Cryptography',
         'Topic :: Security',
+        'Development Status :: 5 - Production/Stable',
         'Natural Language :: English',
         'License :: OSI Approved :: MIT License',
         'Operating System :: MacOS :: MacOS X',
@@ -58,7 +59,6 @@ setup(
         'Operating System :: Unix',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 3',
-
+        'Programming Language :: Python :: 3'
     ],
 )
