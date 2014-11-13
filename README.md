@@ -91,3 +91,6 @@ Overwrite an existing file with the new decrypted file
 #### `--stdout | -s`
 
 Push the decrypted data to the standard output stream instead of generating a new file
+
+---
+[MIT License](https://github.com/chrissimpkins/crypto/blob/master/docs/LICENSE) | Built with the [Naked Framework](https://pypi.python.org/pypi/Naked)
