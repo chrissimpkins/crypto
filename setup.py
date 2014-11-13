@@ -29,7 +29,7 @@ def version_read():
 setup(
     name='crypto',
     version=version_read(),
-    description='Simple symmetric GPG file encryption',
+    description='Simple symmetric GPG file encryption and decryption',
     long_description=(docs_read('README.rst')),
     url='https://github.com/chrissimpkins/crypto',
     license='MIT license',
@@ -42,11 +42,23 @@ setup(
             'decrypto = crypto.decryptoapp:main'
         ],
     },
-    scripts=['scripts/crypto-multi.sh', 'scripts/crypto-single.sh'],
     packages=find_packages("lib"),
     package_dir={'': 'lib'},
     install_requires=['Naked'],
-    keywords='',
+    keywords='encryption,decryption,gpg,pgp,openpgp,cipher,AES256,crypto,cryptography,security,privacy',
     include_package_data=True,
-    classifiers=[],
+    classifiers=[
+        'Intended Audience :: End Users/Desktop',
+        'Topic :: Security :: Cryptography',
+        'Topic :: Security',
+        'Natural Language :: English',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: POSIX',
+        'Operating System :: Unix',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+
+    ],
 )
