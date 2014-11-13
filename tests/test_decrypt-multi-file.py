@@ -94,9 +94,21 @@ class CryptoMultiFileDecryptTest(unittest.TestCase):
         os.remove(make_path("testdir5", "test1.txt"))
          ## do not remove the test1.txt in the testdir6, needed for other tests
 
-    # stdout flag with multiple files
-    def test_decrypt_multifile_stdout(self):
+    # stdout long flag with multiple files
+    def test_decrypt_multifile_long_stdout(self):
         command = "decrypto --stdout testdir6/test1.txt.crypt testdir6/test2.txt.gpg"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("single line of text from test1.txt")
+        child.expect("single line of text from test2.txt")
+        child.close()
+
+    # stdout short flag with multiple files
+    def test_decrypt_multifile_short_stdout(self):
+        command = "decrypto -s testdir6/test1.txt.crypt testdir6/test2.txt.gpg"
         child = pexpect.spawn(command)
         child.expect("Please enter your passphrase: ")
         child.sendline("test")
