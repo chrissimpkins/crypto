@@ -1,9 +1,11 @@
 # crypto
 
-## Simple symmetric GPG file encryption
+## Simple symmetric GPG file encryption and decryption
 
 ## About
 crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm.
+
+Tested in Python 2.7, 3.4, and pypy.
 
 ## Quickstart
 
@@ -12,7 +14,7 @@ crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encrypti
 crypto sometext.txt
 ```
 
-#### Encrypt with Portable ASCII Armored Output
+#### Encrypt with Portable ASCII Armored Format
 ```
 crypto --armor sometext.txt
 ```
@@ -39,7 +41,7 @@ decrypto privatedir
 
 #### Decrypt Text to Standard Output Stream
 ```
-decrypto --stdout sometext.txt.crypt
+decrypto --stdout sometext.txt.gpg
 ```
 
 
@@ -59,7 +61,7 @@ brew install gpg
 Please refer to the detailed documentation on the Gnu Privacy Guard and Mac GPG Tools suite sites for more information if you choose the source or GPG Tools approaches.
 
 #### Linux Users
-If gpg is not installed on your Linux distro, you can use your package manager to install it or compile and install it from the [source code](https://www.gnupg.org/download/index.html).
+If gpg is not installed on your Linux distro, you can use your package manager to install it or compile and install it from the [source](https://www.gnupg.org/download/index.html).
 
 ### 2) Install crypto
 You can install crypto with [pip](https://pypi.python.org/pypi/pip/):
