@@ -12,7 +12,7 @@ crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encrypti
 crypto sometext.txt
 ```
 
-#### Encrypt with ASCII Armored Output
+#### Encrypt with Portable ASCII Armored Output
 ```
 crypto --armor sometext.txt
 ```
