@@ -110,6 +110,11 @@ Other Options
 --usage              View usage documentation
 --version | -v       View crypto version
 
+
+Issues
+=========
+Please submit a `new issue report on the GitHub repository <https://github.com/chrissimpkins/crypto/issues>`_ with a detailed overview of the problem that you are having.
+
 ------
 
 `MIT License <https://github.com/chrissimpkins/crypto/blob/master/docs/LICENSE>`_ | Built with `Naked <http://naked-py.com>`_
