@@ -90,7 +90,7 @@ def main():
                 if argument[0] == "-":
                     pass # if it is an option, do nothing
                 else:
-                    stdout("'" + argument + "' does not appear to be an existing file or directory.  Will not attempt decryption for this argument.")
+                    stderr("'" + argument + "' does not appear to be an existing file or directory.  Aborting decryption attempt for this request.", 0)
 
         # unroll the contained directory files into the file_list IF they are encrypted file types
         if len(directory_list) > 0:
@@ -107,9 +107,9 @@ def main():
                         file_list.append(make_path(directory, contained_file))
 
 
-        # confirm that there are files for encryption, if not abort
+        # confirm that there are files for decryption, if not abort
         if len(file_list) == 0:
-            stderr("Could not identify files for encryption")
+            stderr("Could not identify files for decryption")
             sys.exit(1)
 
         # get passphrase used to symmetrically decrypt the file
@@ -176,7 +176,7 @@ def main():
                     if file_exists(tmp_filename):
                         os.remove(tmp_filename)
 
-            # overwrite the entered passphrases after file decryption is complete
+            # overwrite the entered passphrases after file decryption is complete for all files
             passphrase = ""
             passphrase_confirm = ""
 
