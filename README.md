@@ -92,5 +92,19 @@ Overwrite an existing file with the new decrypted file
 
 Push the decrypted data to the standard output stream instead of generating a new file
 
+### Other Options
+
+#### `--help | -h`
+
+View the help documentation
+
+#### `--usage`
+
+View the usage documentation
+
+#### `--version | -v`
+
+View the crypto version number
+
 ---
 [MIT License](https://github.com/chrissimpkins/crypto/blob/master/docs/LICENSE) | Built with the [Naked Framework](https://pypi.python.org/pypi/Naked)
