@@ -42,12 +42,13 @@ decrypto privatedir
 decrypto --stdout sometext.txt.crypt
 ```
 
+
 ## Install
 
 ### 1) Install GPG
 
 #### Mac OSX Users
-Mac OSX users can install GPG from [source](https://www.gnupg.org/download/index.html), with [Homebrew](http://brew.sh/), or by installing the [Mac GPG Tools Suite](https://gpgtools.org/gpgsuite.html).
+Mac OSX users can install gpg from [source](https://www.gnupg.org/download/index.html), with [Homebrew](http://brew.sh/), or by installing the [Mac GPG Tools Suite](https://gpgtools.org/gpgsuite.html).
 
 The Homebrew install command is:
 
@@ -58,7 +59,7 @@ brew install gpg
 Please refer to the detailed documentation on the Gnu Privacy Guard and Mac GPG Tools suite sites for more information if you choose the source or GPG Tools approaches.
 
 #### Linux Users
-If GPG is not installed on your Linux distro, you can use your package manager to install it or compile and install it from the [source code](https://www.gnupg.org/download/index.html).
+If gpg is not installed on your Linux distro, you can use your package manager to install it or compile and install it from the [source code](https://www.gnupg.org/download/index.html).
 
 ### 2) Install crypto
 You can install crypto with [pip](https://pypi.python.org/pypi/pip/):
@@ -72,3 +73,21 @@ or download the [crypto source](https://github.com/chrissimpkins/crypto/archive/
 ```
 python setup.py install
 ```
+
+## Options
+
+### crypto Options
+
+#### `--armor | -a`
+
+Encrypt in a portable ASCII armored format
+
+### decrypto Options
+
+#### `--overwrite | -o`
+
+Overwrite an existing file with the new decrypted file
+
+#### `--stdout | -s`
+
+Push the decrypted data to the standard output stream instead of generating a new file
