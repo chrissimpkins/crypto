@@ -2,10 +2,10 @@
 
 ## Simple symmetric GPG file encryption
 
-### About
-crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm by default.
+## About
+crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm.
 
-### Quickstart
+## Quickstart
 
 #### Encrypt a File
 ```
@@ -42,11 +42,12 @@ decrypto privatedir
 decrypto --stdout sometext.txt.crypt
 ```
 
-### Install
-#### Install GPG
+## Install
 
-##### Mac OSX Users
-Mac OSX users can install GPG from [source](https://www.gnupg.org/download/index.html), with Homebrew, or by installing the [Mac GPG Tools Suite](https://gpgtools.org/gpgsuite.html).
+### Install GPG
+
+#### Mac OSX Users
+Mac OSX users can install GPG from [source](https://www.gnupg.org/download/index.html), with [Homebrew](http://brew.sh/), or by installing the [Mac GPG Tools Suite](https://gpgtools.org/gpgsuite.html).
 
 The Homebrew install command is:
 
@@ -56,5 +57,18 @@ brew install gpg
 
 Please refer to the detailed documentation on the Gnu Privacy Guard and Mac GPG Tools suite sites for more information if you choose the source or GPG Tools approaches.
 
-##### Linux Users
+#### Linux Users
 If GPG is not installed on your Linux distro, you can use your package manager to install it or compile and install it from the [source code](https://www.gnupg.org/download/index.html).
+
+### Install crypto
+You can install crypto with [pip](https://pypi.python.org/pypi/pip/):
+
+```
+pip install crypto
+```
+
+or download the [crypto source](https://github.com/chrissimpkins/crypto/archive/master.zip), unpack it, navigate to the top level directory, and install with the command:
+
+```
+python setup.py install
+```
