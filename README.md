@@ -3,23 +3,43 @@
 ## Simple symmetric GPG file encryption
 
 ### About
-crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.
+crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm by default.
 
 ### Quickstart
 
 #### Encrypt a File
 ```
-crypto somefile.txt
+crypto sometext.txt
+```
+
+#### Encrypt with ASCII Armored Output
+```
+crypto --armor sometext.txt
 ```
 
 #### Encrypt Multiple Files with Same Passphrase
 ```
-crypto somefile.txt anotherfile.txt
+crypto sometext.txt anotherimage.jpg
 ```
 
-#### Encrypt All Top Level Files in Directory with Same Passphrase
+#### Encrypt All Top Level Files in Multiple Directories with Same Passphrase
 ```
-crypto imagedir
+crypto imagedir privatedir
+```
+
+#### Decrypt a File
+```
+decrypto sometext.txt.crypt
+```
+
+#### Decrypt All Encrypted Files in Top Level of Directory
+```
+decrypto privatedir
+```
+
+#### Decrypt Text to Standard Output Stream
+```
+decrypto --stdout sometext.txt.crypt
 ```
 
 ### Install
