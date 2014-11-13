@@ -5,6 +5,23 @@
 ### About
 crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.
 
+### Quickstart
+
+#### Encrypt a File
+```
+crypto somefile.txt
+```
+
+#### Encrypt Multiple Files with Same Passphrase
+```
+crypto somefile.txt anotherfile.txt
+```
+
+#### Encrypt All Top Level Files in Directory with Same Passphrase
+```
+crypto imagedir
+```
+
 ### Install
 #### Install GPG
 
