@@ -44,7 +44,7 @@ decrypto --stdout sometext.txt.crypt
 
 ## Install
 
-### Install GPG
+### 1) Install GPG
 
 #### Mac OSX Users
 Mac OSX users can install GPG from [source](https://www.gnupg.org/download/index.html), with [Homebrew](http://brew.sh/), or by installing the [Mac GPG Tools Suite](https://gpgtools.org/gpgsuite.html).
@@ -60,7 +60,7 @@ Please refer to the detailed documentation on the Gnu Privacy Guard and Mac GPG 
 #### Linux Users
 If GPG is not installed on your Linux distro, you can use your package manager to install it or compile and install it from the [source code](https://www.gnupg.org/download/index.html).
 
-### Install crypto
+### 2) Install crypto
 You can install crypto with [pip](https://pypi.python.org/pypi/pip/):
 
 ```
