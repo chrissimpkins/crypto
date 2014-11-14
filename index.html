@@ -25,6 +25,7 @@
         <p class="view"><a href="#">Usage</a></p>
         <p class="view"><a href="#">FAQ</a></p>
         <p class="view"><a href="#">Issue Reporting</a></p>
+        <p class="view"><a href="#">Changelog</a></p>
 
         <ul>
           <li><a href="https://github.com/chrissimpkins/crypto/zipball/master">Download <strong>ZIP File</strong></a></li>
@@ -37,7 +38,7 @@
 
 <h3><a id="what-is-crypto" class="anchor" href="#what-is-crypto" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is crypto?</h3>
 
-<p>crypto is an <a href="https://github.com/chrissimpkins/crypto">open source</a> Unix (including Mac OSX) / Linux utility that provides a simple interface to symmetric Gnu Privacy Guard encryption and decryption of one or more files with the same passphrase.</p>
+<p>crypto is an <a href="https://github.com/chrissimpkins/crypto">open source</a> Unix (including Mac OSX) / Linux utility that provides a simple interface to symmetric Gnu Privacy Guard encryption and decryption of one or more files.</p>
 
 <p>It allows you to encrypt files, or entire directories of files, with a simple command:</p>
 
@@ -52,13 +53,18 @@
 <p>Decryption of each encrypted file that you generated above is just as simple:</p>
 
 <h5>Decrypt Multiple Files with the Same Passphrase</h5>
-<pre><code>$ decrypto somefile.txt.crypt anotherfile.png.crypt</code></pre>
+<pre><code>$ decrypto *.crypt</code></pre>
 
 <h5>Decrypt All Top Level Files in Multiple Directories with the Same Passphrase</h5>
 <pre><code>$ decrypto directory1 directory2</code></pre>
 
+<p>Encryption is performed with the <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard#Description_of_the_cipher">AES256 cipher algorithm</a>.  Decryption is supported for IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH, CAMELLIA128, CAMELLIA192, and CAMELLIA256 encrypted files.</p>
 
+<h3><a id="is-it-right-for-you" class="anchor" href="#is-it-right-for-you" aria-hidden="true"><span class="octicon octicon-link"></span></a>Is crypto for you?</h3>
 
+<p>crypto was designed to conceal the meaning in your files and is optimally used for personal data confidentiality.  Local encryption of a file prior to remote storage is an example of appropriate use.</p>
+
+<p>It is not intended for data verification, authentication, and non-repudiation purposes.  If you intend to share the information in your files with others, please educate yourself on the differences between <a href="http://en.wikipedia.org/wiki/Cryptography#Public-key_cryptography">asymmetric</a> and <a href="http://en.wikipedia.org/wiki/Cryptography#Symmetric-key_cryptography">symmetric</a> key encryption.  For most data sharing use cases, asymmetric encryption will be the better option.</p>
 
 
       </section>
