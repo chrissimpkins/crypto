@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Crypto | Install Guide</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <h1><i class="fa fa-key"></i> crypto</h1>
+            <p>Simple symmetric GPG file encryption</p>
+
+            <p class="view"><a href="install.html">Install Guide <small>for Mac OSX and Linux</small></a>
+            </p>
+            <p class="view"><a href="quickstart.html">Quickstart Guide</a>
+            </p>
+            <p class="view"><a href="usage.html">Usage</a>
+            </p>
+            <p class="view"><a href="faq.html">FAQ</a>
+            </p>
+            <p class="view"><a href="issues.html">Issue Reporting</a>
+            </p>
+            <p class="view"><a href="changelog.html">Changelog</a>
+            </p>
+
+            <ul>
+                <li><a href="https://github.com/chrissimpkins/crypto/zipball/master">Download <strong>ZIP File</strong></a>
+                </li>
+                <li><a href="https://github.com/chrissimpkins/crypto/tarball/master">Download <strong>TAR Ball</strong></a>
+                </li>
+                <li><a href="https://github.com/chrissimpkins/crypto">View <strong>Source</strong></a>
+                </li>
+            </ul>
+        </header>
+
+        <section>
+
+            <h2>
+                <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true">
+                    <span class="octicon octicon-link"></span>
+                </a>How to Install crypto</h2>
+
+<h3>Step 1: Install GPG</h3>
+
+<p>crypto requires the Gnu Privacy Guard executable (gpg) to perform encryption and decryption.</p>
+
+<h4>Mac OSX GPG Install</h4>
+
+<p>Mac OSX users can install gpg with <a href="http://brew.sh/">Homebrew</a></p>
+
+
+<pre><code>$ brew install gpg</code></pre>
+
+<p>with the <a href="">Mac GPG Tools Suite</a> installer, or by compiling and installing from the <a href="https://www.gnupg.org/download/index.html">source</a>.</p>
+
+<p>You can install either the 'classic' (v1.x) or 'modern' (v2.x) versions of gpg.  If your install uses the executable <code>gpg2</code> rather than <code>gpg</code>, please create the following alias:</p>
+
+<pre><code>alias gpg="gpg2"</code></pre>
+
+<p>Confirm your install by typing:</p>
+
+<pre><code>$ gpg --version</code></pre>
+
+<p>The installed gpg version should be displayed.</p>
+
+
+<h4>Linux GPG Install</h4>
+
+<p>If <code>gpg</code> is not installed on your Linux distro, you can install it with your package manager or download, compile, and install from the <a href="https://www.gnupg.org/download/index.html">source</a>.</p>
+
+<p><p>You can install either the 'classic' (v1.x) or 'modern' (v2.x) versions of gpg.  If your install uses the executable <code>gpg2</code> rather than <code>gpg</code>, please create the following alias:</p></p>
+
+<p>Confirm your install by typing:</p>
+
+<pre><code>$ gpg --version</code></pre>
+
+<p>The installed gpg version should be displayed.</p>
+
+<h3>Step 2: Install crypto</h3>
+
+<p>You can install crypto with pip:</p>
+
+<pre><code>pip install crypto</code></pre>
+
+<p>or <a href="https://github.com/chrissimpkins/crypto/tarball/master">download the source</a>, unpack it, navigate to the top level source directory and run:</p>
+
+<pre><code>python setup.py install</code></pre>
+
+        </section>
+        <footer>
+            <p>
+                <small>Hosted by <i class="fa fa-github"></i> GitHub</small>
+            </p>
+        </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+
+</body>
+
+</html>
