@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Crypto | Usage Guide</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <h1><i class="fa fa-key"></i> crypto</h1>
+            <p>Simple symmetric GPG file encryption</p>
+
+            <p class="view"><a href="install.html">Install Guide <small>for Mac OSX and Linux</small></a>
+            </p>
+            <p class="view"><a href="quickstart.html">Quickstart Guide</a>
+            </p>
+            <p class="view"><a href="usage.html">Usage</a>
+            </p>
+            <p class="view"><a href="faq.html">FAQ</a>
+            </p>
+            <p class="view"><a href="issues.html">Issue Reporting</a>
+            </p>
+            <p class="view"><a href="changelog.html">Changelog</a>
+            </p>
+
+            <ul>
+                <li><a href="https://github.com/chrissimpkins/crypto/zipball/master">Download <strong>ZIP File</strong></a>
+                </li>
+                <li><a href="https://github.com/chrissimpkins/crypto/tarball/master">Download <strong>TAR Ball</strong></a>
+                </li>
+                <li><a href="https://github.com/chrissimpkins/crypto">View <strong>Source</strong></a>
+                </li>
+            </ul>
+        </header>
+
+        <section>
+
+            <h3>
+                <a id="usage" class="anchor" href="#usage" aria-hidden="true">
+                    <span class="octicon octicon-link"></span>
+                </a>Usage</h3>
+
+<h4>Command Line Syntax</h4>
+<h5>Encryption</h5>
+<p><pre><code>$ crypto &lt;options&gt; [file path] &lt;file path 2...&gt;</code></pre></p>
+<p><pre><code>$ crypto &lt;options&gt; [directory path] &lt;directory path 2...&gt;</code></pre></p>
+
+<h5>Decryption</h5>
+<p><pre><code>$ decrypto &lt;options&gt; [file path] &lt;file path 2...&gt;</code></pre></p>
+<p><pre><code>$ decrypto &lt;options&gt; [directory path] &lt;directory path 2...&gt;</code></pre></p>
+
+<h4>crypto Options</h4>
+<TABLE>
+<TR> <TD><code>--armor | -a</code></TD>   <TD>encrypt in a portable ASCII armored format</TD> </TR>
+</TABLE>
+
+<h4>decrypto Options</h4>
+<TABLE>
+<TR> <TD><code>--overwrite|-o</code></TD>   <TD>overwrite an existing file with a decrypted file</TD> </TR>
+<TR> <TD><code>--stdout | -s</code></TD>     <TD>print decrypted text to the standard output stream</TD> </TR>
+</TABLE>
+
+
+
+<h4>Utility Options</h4>
+<TABLE>
+<TR> <TD><code>--help | -h</code></TD>      <TD>view help documentation</TD> </TR>
+<TR> <TD><code>--usage</code></TD>     <TD>view usage documentation</TD> </TR>
+<TR> <TD><code>--version | -v</code></TD>      <TD>view installed version number</TD> </TR>
+</TABLE>
+
+
+        </section>
+        <footer>
+            <p>
+                <p>
+                    <small>Developed by <a href="https://github.com/chrissimpkins">Chris Simpkins</a>
+                    </small>
+                    <br>
+                    <small>Hosted by <i class="fa fa-github"></i> GitHub</small>
+                </p>
+        </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+
+</body>
+
+</html>
