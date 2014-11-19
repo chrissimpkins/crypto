@@ -11,7 +11,7 @@ app_name = 'crypto'
 #------------------------------------------------------------------------------
 major_version = "1"
 minor_version = "0"
-patch_version = "0"
+patch_version = "1"
 
 #------------------------------------------------------------------------------
 # Debug Flag (switch to False for production release code)
@@ -24,22 +24,25 @@ debug = False
 usage = """
 Encrypt by explicit file path:
 ------------------------------
-  crypto [file path] <file path...>
+  crypto <options> [file path] <file path 2...>
 
 
 Encrypt all top level files in directory:
 -----------------------------------------
-  crypto [directory path] <directory path...>
+  crypto <options> [directory path] <directory path 2...>
 
 
 Decrypt by explicit file path:
 ------------------------------
-  decrypto [file path] <file path...>
+  decrypto <options> [file path] <file path 2...>
 
 
 Decrypt all top level encrypted files in directory:
 ---------------------------------------------------
-  decrypto [directory path] <directory path...>
+  decrypto <options> [directory path] <directory path 2...>
+
+
+Enter `crypto --help` or `decrypto --help` to view the available options.
 
 """
 
@@ -47,25 +50,26 @@ Decrypt all top level encrypted files in directory:
 # Help String
 #------------------------------------------------------------------------------
 help = """
----------------------------------------
+------------------------------------------------------
 crypto
 Simple symmetric GPG file encryption
 Copyright 2014 Christopher Simpkins
 MIT license
-https://github.com/chrissimpkins/crypto
----------------------------------------
+Source: https://github.com/chrissimpkins/crypto
+Docs: http://chrissimpkins.github.io/crypto/index.html
+------------------------------------------------------
 
 ABOUT
 crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files.  gpg must be installed on your system in order to use the crypto and decrypto executables.
 
 USAGE
   ENCRYPTION
-    crypto [file path] <file path...>
-    crypto [directory path] <directory path...>
+    crypto <options> [file path] <file path...>
+    crypto <options> [directory path] <directory path...>
 
   DECRYPTION
-    decrypto [file path] <file path...>
-    decrypto [directory path] <directory path...>
+    decrypto <options> [file path] <file path...>
+    decrypto <options> [directory path] <directory path...>
 
 CRYPTO OPTION
    --armor | -a          Use a portable ASCII armored encryption format

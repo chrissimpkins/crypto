@@ -1,120 +1,80 @@
-================
- crypto
-================
-------------------------------------------------------
- Simple symmetric GPG file encryption and decryption
-------------------------------------------------------
+crypto
+========
 
-About
-=============
-`crypto <https://github.com/chrissimpkins/crypto>`_ provides a simple interface to symmetric `Gnu Privacy Guard <https://www.gnupg.org/>`_ encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of the Gnu Privacy Guard executable (gpg) and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm.
+Documentation: http://chrissimpkins.github.io/crypto/index.html
 
-Tested in Python 2.7, 3.4, and pypy.
+Description
+-------------
 
-Quickstart
-=============
+crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm.
 
-Encrypt a File
-----------------
-
-	crypto sometext.txt
-
-
-Encrypt with Portable ASCII Armored Format
----------------------------------------------
-
-	crypto --armor sometext.txt
-
-
-Encrypt Multiple Files with Same Passphrase
----------------------------------------------
-
-	crypto sometext.txt anotherimage.jpg
-
-
-Encrypt All Top Level Files in Multiple Directories with Same Passphrase
----------------------------------------------------------------------------
-
-	crypto imagedir privatedir
-
-
-Decrypt a File
-----------------
-
-	decrypto sometext.txt.crypt
-
-
-Decrypt All Encrypted Files in Top Level of Directory
---------------------------------------------------------
-
-	decrypto privatedir
-
-
-Decrypt Text to Standard Output Stream
-----------------------------------------
-
-	decrypto --stdout sometext.txt.gpg
+Tested in cPython 2.7.x, 3.4.x, and pypy 2.4.x (Python version 2.7.8)
 
 
 Install
-==========
+---------
 
-1) Install GPG
+Install with ``pip`` using the command:
+
+.. code-block:: bash
+
+	$ pip install crypto
+
+or `download the source repository <https://github.com/chrissimpkins/crypto/tarball/master>`_, unpack it, and navigate to the top level of the repository.  Then enter:
+
+.. code-block:: bash
+
+	$ python setup.py install
+
+
+Usage
+---------
+
+Encryption (crypto)
+^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+	$ crypto <options> [file path] <file path 2...>
+
+.. code-block:: bash
+
+	$ crypto <options> [directory path] <directory path 2...>
+
+
+Decryption (decrypto)
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+	$ decrypto <options> [file path] <file path 2...>
+
+.. code-block:: bash
+
+	$ decrypto <options> [directory path] <directory path 2...>
+
+
+You can find all available options in the `documentation <http://chrissimpkins.github.io/crypto/usage.html>`_ or by using one of the following commands:
+
+.. code-block:: bash
+
+	$ crypto --help
+	$ decrypto --help
+
+
+Frequently Asked Questions
+-------------------------------
+
+The FAQ is available `here <http://chrissimpkins.github.io/crypto/faq.html>`_
+
+
+Issue Reporting
 -------------------
 
-Mac OSX
-^^^^^^^^^
-Mac OSX users can install gpg from `source <https://www.gnupg.org/download/index.html>`_, with `Homebrew <http://brew.sh/>`_, or by installing the `Mac GPG Tools Suite <https://gpgtools.org/gpgsuite.html>`_.
-
-The Homebrew install command is:
-
-	brew intall gpg
-
-Please refer to the detailed documentation on the Gnu Privacy Guard and Mac GPG Tools suite sites for more information if you choose the source or GPG Tools approaches.
-
-Linux
-^^^^^^^^
-If gpg is not installed on your Linux distro, you can use your package manager to install it or compile and install it from the `source <https://www.gnupg.org/download/index.html>`_.
-
-2) Install crypto
--------------------
-You can install crypto with `pip <https://pypi.python.org/pypi/pip/>`_:
-
-	pip install crypto
-
-or download the `crypto source <https://github.com/chrissimpkins/crypto/archive/master.zip>`_, unpack it, navigate to the top level directory, and install with the command:
-
-	python setup.py install
+Issue reporting is available on the `GitHub repository <https://github.com/chrissimpkins/crypto/issues>`_
 
 
-Options
-=========
+Changelog
+------------
 
-crypto Options
------------------
-
---armor | -a         Encrypt in a portable ASCII armored format
-
-
-decrypto Options
-------------------
-
---overwrite | -o     Overwrite an existing file with the decrypted file
---stdout    | -s     Push the file data to the standard output stream
-
-
-Other Options
---------------
-
---help    | -h       View help documentation
---usage              View usage documentation
---version | -v       View crypto version
-
-
-Issues
-=========
-Please submit a `new issue report on the GitHub repository <https://github.com/chrissimpkins/crypto/issues>`_ with a detailed overview of the problem that you are having.
-
-------
-
-`MIT License <https://github.com/chrissimpkins/crypto/blob/master/docs/LICENSE>`_ | Built with `Naked <http://naked-py.com>`_
+The changelog is available `here <http://chrissimpkins.github.io/crypto/changelog.html>`_

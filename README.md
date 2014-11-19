@@ -5,41 +5,50 @@
 ## About
 crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm.
 
+## Documentation
+
+Detailed documentation is available [here](http://chrissimpkins.github.io/crypto/index.html).
+
 ## Quickstart
 
 #### Encrypt a File
 ```
-crypto sometext.txt
+$ crypto sometext.txt
 ```
 
 #### Encrypt with Portable ASCII Armored Format
 ```
-crypto --armor sometext.txt
+$ crypto --armor sometext.txt
 ```
 
 #### Encrypt Multiple Files with Same Passphrase
 ```
-crypto sometext.txt anotherimage.jpg
+$ crypto sometext.txt anotherimage.jpg
+```
+
+#### Encrypt Multiple Files with Wildcard Expansion
+```
+$ crypto *.txt
 ```
 
 #### Encrypt All Top Level Files in Multiple Directories with Same Passphrase
 ```
-crypto imagedir privatedir
+$ crypto imagedir privatedir
 ```
 
 #### Decrypt a File
 ```
-decrypto sometext.txt.crypt
+$ decrypto sometext.txt.crypt
 ```
 
 #### Decrypt All Encrypted Files in Top Level of Directory
 ```
-decrypto privatedir
+$ decrypto privatedir
 ```
 
 #### Decrypt Text to Standard Output Stream
 ```
-decrypto --stdout sometext.txt.gpg
+$ decrypto --stdout sometext.txt.gpg
 ```
 
 
