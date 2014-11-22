@@ -1,5 +1,9 @@
 TODO:
 
-- support wildcard file search - works with `decrypto -s *.(crypt|gpg)` and `decrypto -s *.crypt` - needs testing
+- 1.0.2 : unicode support - test this
 
-- support multi-part encrypted files with local encrypted compiler (.shard)
+- 1.0.2 : confirm that user entered a password - added code, needs to be tested
+
+- 1.1.0 : add file type checks and alter the compression settings based upon benchmark testing
+
+- 2.0.0 : support multi-part encrypted files with local encrypted compiler (.shard)
