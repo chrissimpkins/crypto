@@ -114,6 +114,9 @@ def main():
 
         # get passphrase used to symmetrically decrypt the file
         passphrase = getpass.getpass("Please enter your passphrase: ")
+        if len(passphrase) == 0: # confirm that user entered a passphrase
+                stderr("You did not enter a passphrase. Please repeat your command and try again.")
+                sys.exit(1)
         passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
 
         if passphrase == passphrase_confirm:
@@ -210,6 +213,9 @@ def main():
 
             # get passphrase used to symmetrically decrypt the file
             passphrase = getpass.getpass("Please enter your passphrase: ")
+            if len(passphrase) == 0: # confirm that user entered a passphrase
+                stderr("You did not enter a passphrase. Please repeat your command and try again.")
+                sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
 
             # confirm that the passphrases match
@@ -241,6 +247,9 @@ def main():
 
             #prompt for the passphrase
             passphrase = getpass.getpass("Please enter your passphrase: ")
+            if len(passphrase) == 0: # confirm that user entered a passphrase
+                stderr("You did not enter a passphrase. Please repeat your command and try again.")
+                sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
 
             if passphrase == passphrase_confirm:

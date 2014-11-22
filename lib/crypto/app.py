@@ -105,6 +105,9 @@ def main():
         else:
         # file_list should contain all filepaths from either user specified file paths or contained in top level of directory, encrypt them
             passphrase = getpass.getpass("Please enter your passphrase: ")
+            if len(passphrase) == 0: # confirm that user entered a passphrase
+                stderr("You did not enter a passphrase. Please repeat your command and try again.")
+                sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
             if passphrase == passphrase_confirm:
                 for the_file in file_list:
@@ -146,6 +149,9 @@ def main():
                 sys.exit(1)
             # if passes test above, obtain passphrase from the user
             passphrase = getpass.getpass("Please enter your passphrase: ")
+            if len(passphrase) == 0: # confirm that user entered a passphrase
+                stderr("You did not enter a passphrase. Please repeat your command and try again.")
+                sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
             if passphrase == passphrase_confirm:
                 encrypted_filepath = path + '.crypt' # modify the encrypted filename with .crypt file suffix
@@ -179,6 +185,9 @@ def main():
                 sys.exit(1)
             #prompt for the passphrase
             passphrase = getpass.getpass("Please enter your passphrase: ")
+            if len(passphrase) == 0: # confirm that user entered a passphrase
+                stderr("You did not enter a passphrase. Please repeat your command and try again.")
+                sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
 
             if passphrase == passphrase_confirm:
