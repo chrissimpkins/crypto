@@ -146,6 +146,16 @@ class CryptoMultiFileDecryptTest(unittest.TestCase):
         child.close()
         self.assertEqual(child.exitstatus, 1)
 
+    # test that fails on blank passphrase (i.e. user hit return without entering a passphrase)
+    def test_decrypt_multifile_blank_passphrase(self):
+        command = "decrypto testdir5/test1.txt.crypt testdir5/test2.txt.gpg"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("")
+        child.expect("You did not enter a passphrase. Please repeat your command and try again.")
+        child.close()
+        self.assertEqual(child.exitstatus, 1)
+
 
 
 

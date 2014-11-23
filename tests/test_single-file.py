@@ -115,7 +115,7 @@ class CryptoSingleFileEncryptTest(unittest.TestCase):
         self.assertEqual(child.exitstatus, 1)
 
 
-    # TESTS FOR NON-MATCH ON PASSPHRASE
+    # TESTS FOR PASSPHRASE
 
     def test_singlefile_encrypt_bad_passphrase(self):
         command = "crypto testdir1/test1.txt"
@@ -127,6 +127,16 @@ class CryptoSingleFileEncryptTest(unittest.TestCase):
         child.expect("Please enter your passphrase again: ")
         child.sendline("bogus")
         child.expect("The passphrases did not match.  Please enter your command again.")
+        child.close()
+        self.assertEqual(child.exitstatus, 1)
+
+    # confirm that fails on blank passphrase entry
+    def test_singlefile_encrypt_blank_passphrase(self):
+        command = "crypto testdir1/test1.txt"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("")
+        child.expect("You did not enter a passphrase. Please repeat your command and try again.")
         child.close()
         self.assertEqual(child.exitstatus, 1)
 

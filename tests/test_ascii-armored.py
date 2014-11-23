@@ -161,5 +161,17 @@ class CryptoASCIIFileEncryptTest(unittest.TestCase):
         child.close()
         self.assertEqual(child.exitstatus, 1)
 
+    # fail on blank passphrase (i.e. hit enter without typing a passphrase)
+    def test_asciifile_blank_passphrase(self):
+        command = "crypto --armor testdir1"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("")
+        child.expect("You did not enter a passphrase. Please repeat your command and try again.")
+        child.close()
+        self.assertEqual(child.exitstatus, 1)
+
+
+
 
 

@@ -63,6 +63,16 @@ class CryptoSingleDirectoryDecryptTest(unittest.TestCase):
         child.close()
         self.assertEqual(child.exitstatus, 1)
 
+    # test that fails on blank passphrase entry
+    def test_decrypt_singledir_blank_passphrase(self):
+        command = "decrypto testdir5"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("")
+        child.expect("You did not enter a passphrase. Please repeat your command and try again.")
+        child.close()
+        self.assertEqual(child.exitstatus, 1)
+
     # missing directory test
     def test_decrypt_singledir_diff_passphrase(self):
         command = "decrypto fakedir"
@@ -140,6 +150,16 @@ class CryptoSingleDirectoryDecryptTest(unittest.TestCase):
         child.expect("Please enter your passphrase again: ")
         child.sendline("bogus")
         child.expect("The passphrases did not match.  Please enter your command again.")
+        child.close()
+        self.assertEqual(child.exitstatus, 1)
+
+    # test that fails on blank passphrase entry
+    def test_decrypt_singledir_stdout_blank_passphrase(self):
+        command = "decrypto -s testdir6"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("")
+        child.expect("You did not enter a passphrase. Please repeat your command and try again.")
         child.close()
         self.assertEqual(child.exitstatus, 1)
 

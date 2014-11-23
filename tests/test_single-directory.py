@@ -63,6 +63,16 @@ class CryptoDirectoryEncryptTest(unittest.TestCase):
         child.close()
         self.assertEqual(child.exitstatus, 1)
 
+    # fail on blank passphrase entry
+    def test_singledir_blank_passphrase(self):
+        command = "crypto testdir1"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("")
+        child.expect("You did not enter a passphrase. Please repeat your command and try again.")
+        child.close()
+        self.assertEqual(child.exitstatus, 1)
+
     # DIRECTORY FILE ENCRYPTION TESTS
     def test_singledir_file_encrypt(self):
         command = "crypto testdir2"

@@ -105,3 +105,15 @@ class CryptoMultiFileEncryptTest(unittest.TestCase):
         child.expect("The passphrases did not match. Please enter your command again.")
         child.close()
         self.assertEqual(child.exitstatus, 1)
+
+    # confirm that fails on blank passphrase entry
+    def test_multifile_blank_passphrase(self):
+        command = "crypto testdir1/test1.txt testdir1/test2.txt"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("")
+        child.expect("You did not enter a passphrase. Please repeat your command and try again.")
+        child.close()
+        self.assertEqual(child.exitstatus, 1)
+
+
