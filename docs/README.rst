@@ -1,7 +1,4 @@
-crypto
-========
-
-Documentation: http://chrissimpkins.github.io/crypto/index.html
+Documentation: http://chrissimpkins.github.io/crypto/
 
 Description
 -------------
@@ -25,6 +22,16 @@ or `download the source repository <https://github.com/chrissimpkins/crypto/tarb
 .. code-block:: bash
 
 	$ python setup.py install
+
+
+Upgrade
+-----------
+
+You can upgrade your crypto version with the command:
+
+.. code-block:: bash
+
+	$ pip install --upgrade crypto
 
 
 Usage
@@ -65,7 +72,7 @@ You can find all available options in the `documentation <http://chrissimpkins.g
 Frequently Asked Questions
 -------------------------------
 
-The FAQ is available `here <http://chrissimpkins.github.io/crypto/faq.html>`_
+`FAQ link <http://chrissimpkins.github.io/crypto/faq.html>`_
 
 
 Issue Reporting
@@ -77,4 +84,4 @@ Issue reporting is available on the `GitHub repository <https://github.com/chris
 Changelog
 ------------
 
-The changelog is available `here <http://chrissimpkins.github.io/crypto/changelog.html>`_
+`Changelog link <http://chrissimpkins.github.io/crypto/changelog.html>`_
