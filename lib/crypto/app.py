@@ -154,21 +154,25 @@ def main():
                 sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
             if passphrase == passphrase_confirm:
-                encrypted_filepath = path + '.crypt' # modify the encrypted filename with .crypt file suffix
-                system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + path
+                from commands.cryptor import Cryptor
+                the_cryptor = Cryptor(passphrase)
+                the_cryptor.encrypt_file(path)
 
-                response = muterun(system_command)
-                # overwrite user entered passphrases
-                passphrase = ""
-                passphrase_confirm = ""
-                # check returned status code
-                if response.exitcode == 0:
-                    stdout(encrypted_filepath + " was generated from " + path)
-                    stdout("Encryption complete")
-                else:
-                    stderr(response.stderr, 0)
-                    stderr("Encryption failed")
-                    sys.exit(1)
+                # encrypted_filepath = path + '.crypt' # modify the encrypted filename with .crypt file suffix
+                # system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + path
+
+                # response = muterun(system_command)
+                # # overwrite user entered passphrases
+                # passphrase = ""
+                # passphrase_confirm = ""
+                # # check returned status code
+                # if response.exitcode == 0:
+                #     stdout(encrypted_filepath + " was generated from " + path)
+                #     stdout("Encryption complete")
+                # else:
+                #     stderr(response.stderr, 0)
+                #     stderr("Encryption failed")
+                #     sys.exit(1)
             else:
                 stderr("The passphrases did not match.  Please enter your command again.")
                 sys.exit(1)
