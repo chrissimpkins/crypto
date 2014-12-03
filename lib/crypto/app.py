@@ -154,7 +154,7 @@ def main():
                 sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
             if passphrase == passphrase_confirm:
-                from commands.cryptor import Cryptor
+                from library.cryptor import Cryptor
                 the_cryptor = Cryptor(passphrase)
                 the_cryptor.encrypt_file(path)
 
