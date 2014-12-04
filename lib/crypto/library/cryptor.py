@@ -13,14 +13,18 @@ class Cryptor(object):
     def __init__(self, passphrase):
         self.command_default = "gpg -z 1 --batch --force-mdc --cipher-algo AES256 -o "
         self.command_nocompress = "gpg -z 0 --batch --force-mdc --cipher-algo AES256 -o "
-        self.command_maxcompress = "gpg -z 9 --batch --force-mdc --cipher-algo AES256 -o "
+        self.command_maxcompress = "gpg -z 7 --batch --force-mdc --cipher-algo AES256 -o "
         self.command_default_armored = "gpg -z 1 --armor --batch --force-mdc --cipher-algo AES256 -o "
         self.command_nocompress_armored = "gpg -z 0 --armor --batch --force-mdc --cipher-algo AES256 -o "
-        self.command_maxcompress_armored = "gpg -z 9 --armor --batch --force-mdc --cipher-algo AES256 -o "
+        self.command_maxcompress_armored = "gpg -z 7 --armor --batch --force-mdc --cipher-algo AES256 -o "
         self.passphrase = passphrase
 
     #------------------------------------------------------------------------------
-    # public functions
+    # PUBLIC methods
+    #------------------------------------------------------------------------------
+
+    #------------------------------------------------------------------------------
+    # encrypt_file : file encryption method
     #------------------------------------------------------------------------------
     def encrypt_file(self, inpath, force_nocompress=False, force_compress=False, armored=False):
         if armored:
@@ -47,31 +51,35 @@ class Cryptor(object):
         encrypted_outpath = self._create_outfilepath(inpath)
         system_command = command_stub + encrypted_outpath + " --passphrase " + self.passphrase + " --symmetric " + inpath
 
-        response = muterun(system_command)
-        # check returned status code
-        if response.exitcode == 0:
-            stdout(encrypted_outpath + " was generated from " + inpath)
-        else:
-            stderr(response.stderr, 0)
-            stderr("Encryption failed")
+        try:
+            response = muterun(system_command)
+            # check returned status code
+            if response.exitcode == 0:
+                stdout(encrypted_outpath + " was generated from " + inpath)
+            else:
+                stderr(response.stderr, 0)
+                stderr("Encryption failed")
+                sys.exit(1)
+        except Exception:
+            stderr("There was a problem with the excution of gpg. Encryption failed")
             sys.exit(1)
 
+    #------------------------------------------------------------------------------
+    # encrypt_files : multiple file encryption
+    #------------------------------------------------------------------------------
     def encrypt_files(self, file_list, force_nocompress=False, force_compress=False, armored=False):
         for the_file in file_list:
             self.encrypt_file(the_file, force_nocompress, force_compress, armored)
 
-    def encrypt_directory(self, dir_path, force_nocompress=False, force_compress=False, armored=False):
-        pass
 
-    def encrypt_directories(self, dir_list, force_nocompress=False, force_compress=False, armored=False):
-        for directory in dir_list:
-            self.encrypt_directory(directory, force_nocompress, force_compress, armored)
-
+    #------------------------------------------------------------------------------
+    # cleanup : overwrite the passphrase in memory
+    #------------------------------------------------------------------------------
     def cleanup(self):
         self.passphrase = ""
 
     #------------------------------------------------------------------------------
-    # private functions
+    # PRIVATE methods
     #------------------------------------------------------------------------------
 
     def _create_outfilepath(self, inpath):
@@ -91,28 +99,3 @@ class Cryptor(object):
         else:
             return False # inappropriate size, skip mime type check
 
-        #------------------------------------------------------------------------------
-        #TEST CODE
-        #------------------------------------------------------------------------------
-        sys.exit(0)
-
-
-#------------------------------------------------------------------------------
-# Decryptor class
-#   performs gpg decryption of one or more files
-#------------------------------------------------------------------------------
-class Decryptor(object):
-    def __init__(self):
-        pass
-
-    def decrypt_file(self, file_path):
-        pass
-
-    def decrypt_files(self, file_list):
-        pass
-
-    def decrypt_directory(self, dir_path):
-        pass
-
-    def decrypt_directories(self, dir_list):
-        pass

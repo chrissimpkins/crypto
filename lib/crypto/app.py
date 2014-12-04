@@ -62,6 +62,16 @@ def main():
         if c.option('--armor') or c.option('-a'):
             ascii_armored = True
 
+        ## MAX COMPRESS / COMPRESS ALL SWITCH
+        max_compress = False
+        if c.option('--space'):
+            max_compress = True
+
+        ## NO COMPRESSION SWITCH
+        no_compress = False
+        if c.option('--speed'):
+            no_compress = True
+
         path_list = [] # user entered paths from command line
         directory_list = [] # directory paths included in the user entered paths from the command line
         file_list = [] # file paths included in the user entered paths from the command line (and inside directories entered)
@@ -110,26 +120,29 @@ def main():
                 sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
             if passphrase == passphrase_confirm:
-                for the_file in file_list:
-                    encrypted_filepath = the_file + '.crypt' # modify the encrypted filename with .crypt file suffix
-                    system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + the_file
+                from crypto.library.cryptor import Cryptor
+                the_cryptor = Cryptor(passphrase)
 
-                    if ascii_armored == True: # add --armor switch to the command if indicated on the CL
-                        system_command = "gpg --batch --armor --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + the_file
-
-                    response = muterun(system_command)
-
-                    if response.exitcode == 0:
-                        stdout(encrypted_filepath + " was generated from " + the_file)
+                # run encryption based upon any passed switches
+                if ascii_armored:
+                    if max_compress:
+                        the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=True, armored=True)
+                    elif no_compress:
+                        the_cryptor.encrypt_files(file_list, force_nocompress=True, force_compress=False, armored=True)
                     else:
-                        stderr(response.stderr, 0)
-                        stderr("Encryption failed")
-                        sys.exit(1)
+                        the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=False, armored=True)
+                else:
+                    if max_compress:
+                        the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=True, armored=False)
+                    elif no_compress:
+                        the_cryptor.encrypt_files(file_list, force_nocompress=True, force_compress=False, armored=False)
+                    else:
+                        the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=False, armored=False)
 
                 # overwrite user entered passphrases
                 passphrase = ""
                 passphrase_confirm = ""
-                stdout("Encryption complete")
+                the_cryptor.cleanup()
             else:
                 # passphrases did not match, report to user and abort
                 # overwrite user entered passphrases
@@ -153,26 +166,12 @@ def main():
                 stderr("You did not enter a passphrase. Please repeat your command and try again.")
                 sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
+
             if passphrase == passphrase_confirm:
-                from library.cryptor import Cryptor
+                from crypto.library.cryptor import Cryptor
                 the_cryptor = Cryptor(passphrase)
                 the_cryptor.encrypt_file(path)
-
-                # encrypted_filepath = path + '.crypt' # modify the encrypted filename with .crypt file suffix
-                # system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + path
-
-                # response = muterun(system_command)
-                # # overwrite user entered passphrases
-                # passphrase = ""
-                # passphrase_confirm = ""
-                # # check returned status code
-                # if response.exitcode == 0:
-                #     stdout(encrypted_filepath + " was generated from " + path)
-                #     stdout("Encryption complete")
-                # else:
-                #     stderr(response.stderr, 0)
-                #     stderr("Encryption failed")
-                #     sys.exit(1)
+                the_cryptor.cleanup()
             else:
                 stderr("The passphrases did not match.  Please enter your command again.")
                 sys.exit(1)
@@ -180,13 +179,19 @@ def main():
         # it is a directory, encrypt all top level files with default settings
             dirty_directory_file_list = list_all_files(path)
             # remove dot files and previously encrypted files (with .crypt suffix) from the list of directory files
-            count = 0 # used as key for the list item deletion in for block below
-            directory_file_list = [x for x in dirty_directory_file_list if x[0] != "." and x.endswith(".crypt") == False] # remove dotfiles and .crypt files
+            clean_directory_file_list = [x for x in dirty_directory_file_list if x[0] != "." and x.endswith(".crypt") == False] # remove dotfiles and .crypt files
 
             # confirm that there are still files in the list after the dot files and encrypted files are removed
-            if len(directory_file_list) == 0:
+            if len(clean_directory_file_list) == 0:
                 stderr("There are no unencrypted files in the directory.")
                 sys.exit(1)
+
+            # create relative file paths for each file in the clean_directory_file_list
+            clean_directory_file_list_relpaths = []
+            for clean_file in clean_directory_file_list:
+                new_file_path = make_path(path, clean_file)
+                clean_directory_file_list_relpaths.append(new_file_path)
+
             #prompt for the passphrase
             passphrase = getpass.getpass("Please enter your passphrase: ")
             if len(passphrase) == 0: # confirm that user entered a passphrase
@@ -195,23 +200,10 @@ def main():
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
 
             if passphrase == passphrase_confirm:
-                # encrypt all of the files in the directory
-                for filepath in directory_file_list:
-                    absolute_filepath = make_path(path, filepath) # combine the directory path and file name into absolute path
-                    encrypted_filepath = filepath + '.crypt'
-                    encrypted_filepath = make_path(path, encrypted_filepath) # combined original directory path with the file paths
-                    system_command = "gpg --batch --force-mdc --cipher-algo AES256 -o " + encrypted_filepath + " --passphrase " + passphrase + " --symmetric " + absolute_filepath
-                    response = muterun(system_command)
-                    if response.exitcode == 0:
-                        stdout(encrypted_filepath + " was generated from " + absolute_filepath)
-                    else:
-                        stderr(response.stderr, 0)
-                        stderr("Encryption failed for " + path, 0)
-                        sys.exit(1)
-
-                # overwrite user entered passphrases
-                passphrase = ""
-                passphrase_confirm = ""
+                from crypto.library.cryptor import Cryptor
+                the_cryptor = Cryptor(passphrase)
+                the_cryptor.encrypt_files(clean_directory_file_list_relpaths) #encrypt the list of directory files
+                the_cryptor.cleanup()
             else:
             # passphrases do not match
                 # overwrite user entered passphrases
