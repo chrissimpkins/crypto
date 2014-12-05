@@ -91,6 +91,14 @@ python setup.py install
 
 Encrypt in a portable ASCII armored format
 
+#### `--space`
+
+Favor reduced file size over encryption speed
+
+#### `--speed`
+
+Favor encryption speed over reduced file size
+
 ### decrypto Options
 
 #### `--overwrite | -o`

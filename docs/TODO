@@ -1,7 +1,5 @@
 TODO:
 
-- 1.0.3 : unicode passphrase support - test this
 
-- 1.1.0 : add file type checks and alter the compression settings based upon benchmark testing
 
 - 2.0.0 : support multi-part encrypted files with local encrypted compiler (.shard)

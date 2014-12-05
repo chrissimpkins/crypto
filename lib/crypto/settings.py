@@ -50,14 +50,14 @@ Enter `crypto --help` or `decrypto --help` to view the available options.
 # Help String
 #------------------------------------------------------------------------------
 help = """
-------------------------------------------------------
+-------------------------------------------------
 crypto
 Simple symmetric GPG file encryption
 Copyright 2014 Christopher Simpkins
 MIT license
 Source: https://github.com/chrissimpkins/crypto
-Docs: http://chrissimpkins.github.io/crypto/index.html
-------------------------------------------------------
+Docs: http://chrissimpkins.github.io/crypto/
+-------------------------------------------------
 
 ABOUT
 crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files.  gpg must be installed on your system in order to use the crypto and decrypto executables.
@@ -73,6 +73,8 @@ USAGE
 
 CRYPTO OPTION
    --armor | -a          Use a portable ASCII armored encryption format
+   --space               Favor reduced file size over encryption speed
+   --speed               Favor encryption speed over reduced file size
 
 DECRYPTO OPTIONS
    --overwrite | -o      Overwrite an existing file with the decrypted file
