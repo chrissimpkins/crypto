@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Crypto | Benchmarks</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <h1><i class="fa fa-key"></i> crypto</h1>
+            <p>Simple symmetric GPG file encryption</p>
+
+            <p class="view"><a href="install.html">Install Guide <small>for Mac OSX and Linux</small></a>
+            </p>
+            <p class="view"><a href="quickstart.html">Quickstart Guide</a>
+            </p>
+            <p class="view"><a href="usage.html">Usage</a>
+            </p>
+            <p class="view"><a href="faq.html">FAQ</a>
+            </p>
+            <p class="view"><a href="issues.html">Issue Reporting</a>
+            </p>
+            <p class="view"><a href="changelog.html">Changelog</a>
+            </p>
+
+            <ul>
+                <li><a href="https://github.com/chrissimpkins/crypto/zipball/master">Download <strong>ZIP File</strong></a>
+                </li>
+                <li><a href="https://github.com/chrissimpkins/crypto/tarball/master">Download <strong>TAR Ball</strong></a>
+                </li>
+                <li><a href="https://github.com/chrissimpkins/crypto">View <strong>Source</strong></a>
+                </li>
+            </ul>
+        </header>
+
+        <section>
+
+            <h3>
+                <a id="benchmarks" class="anchor" href="#benchmarks" aria-hidden="true">
+                    <span class="octicon octicon-link"></span>
+                </a>Benchmarks</h3>
+                <p>Benchmark testing was performed on directories of multiple files by mime-type using the GNU time (<code>gtime</code>) application, <code>gpg</code> v2.0.22, and <code>crypto</code> v1.1.0.  The tests compared the default gpg encryption and compression settings (<code>GPG Default</code>) with the default settings used in crypto (<code>crypto Default</code>) and crypto run with the <code>--speed</code> switch active (<code>crypto --speed</code>). Results are reported in seconds of user and system time for encryption of all files in the test for each test group. The cumulative duration represents total CPU time.</p>
+                <p>The results show a significant improvement in the encryption speed with crypto across both text and binary file types.  For text files, the cost of this speedup is a slight decrease in the file compression that is performed at default crypto settings and the elimination of compression (in some cases a slight increase in file size) with the <code>--speed</code> flag.  For binary files, the speedup occurs without significant change in the resulting file size.  This is to be expected because these files are not significantly compressed with the default compression algorithm used by gpg, yet this compression attempt adds significant time to the encryption run.  crypto eliminates this unnecessary compression attempt for binary files.</p>
+
+                <p>Click through the file type header link for details about the tests.</p>
+
+                <h4><a href="text-benchmarks.html"><b>Text Files</b></a></h4>
+                <p>
+                <img src="img/text-bench-575.png" alt="Text benchmarks for crypto">
+                </p>
+                <h4><a href="pdf-benchmarks.html"><b>PDF Files</b></a></h4>
+                <p>
+                <img src="img/pdf-bench-575.png" alt="PDF benchmarks for crypto">
+                </p>
+                <h4><a href=""><b>PNG Files</b></a></h4>
+                <p>
+                <img src="img/png-bench-575.png" alt="PNG image benchmarks for crypto">
+                </p>
+                <h4><a href=""><b>mp3 Files</b></a></h4>
+                <p>
+                <img src="img/mp3-bench-575.png" alt="mp3 benchmarks for crypto">
+                </p>
+
+                <p>These benchmarks can be replicated with the following commands:</p>
+                <h5>crypto --speed Tests</h5>
+                <p><pre><code>gtime --verbose crypto --speed testdir</code></pre></p>
+                <h5>crypto Default Tests</h5>
+                <p><pre><code>gtime --verbose crypto testdir</code></pre></p>
+                <h5>GPG Default Tests</h5>
+                <p><pre><code>gtime --verbose crypto --space testdir</code></pre></p>
+
+
+
+        </section>
+        <footer>
+            <p>
+                <p>
+                    <small>Developed by <a href="https://github.com/chrissimpkins">Chris Simpkins</a>
+                    </small>
+                    <br>
+                    <small>Hosted by <i class="fa fa-github"></i> GitHub</small>
+                </p>
+        </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+
+</body>
+
+</html>
