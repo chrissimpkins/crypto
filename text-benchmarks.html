@@ -67,13 +67,14 @@
                 <img src="img/time-v-compression-1mb-575.png" alt="1 MB Text File Speed vs. Compression Test">
                 </p>
                 <p>
-                Because this is an encryption application and not a dedicated compression application, I elected to minimize the encryption time x file size product in order to achieve a balanced approach to text file handling in crypto.  Across each of these tested file sizes, that occurred at the <code>-z 1</code> compression level (indicated by 2 on the figures above).  At this level, there is a significant decrease in the encryption time relative to higher compression levels without a large file size compromise.  This is the default text file compression level in crypto.  Users who need more compression, can use the <code>--space</code> option which switches to the <code>-z 7</code> compression level.
+                Because this is an encryption application and not a dedicated compression application, I elected to minimize the encryption time x file size product in order to achieve a balanced approach to text file handling in crypto.  Across each of these tested file sizes, that occurred at the <code>-z 1</code> compression level (indicated by 2 on the figures above).  At this level, there is a significant decrease in the encryption time relative to higher compression levels without a large file size compromise.  This is the default text file compression level in crypto.  Users who need more compression, can use the <code>--space</code> option which switches to the <code>-z 7</code> compression level (which is incidentally the gpg default).
                 </p>
 
                 <h4>Text File Benchmarks</h4>
                 <p>The text file benchmarks reported on the <a href="benchmarks.html">main benchmarks page</a> were performed on a directory of text files that included <a href="http://mattmahoney.net/dc/textdata.html">Matt Mahoney's enwik8 text test file</a> (100MB English Wikipedia XML dump), and 10MB, 5MB, 2MB, 1MB, and 10kB files that were derived from the head of this file.</p>
-                <p>The benchmark testing results for this directory of six text files are as follows:</p>
+                <p>The results for this directory of six text files are as follows:</p>
                 <img src="img/text-bench-575.png" alt="Text file benchmark testing in crypto">
+                <p>The encryption run total CPU time decreased from 5.73 sec to 3.68 sec (64% of GPG default) with the default crypto text file settings compared with the default GPG settings.  With the <code>--speed</code> switch, the time was further reduced to 1.89 sec (33% of GPG default).</p>
 
 
         </section>
