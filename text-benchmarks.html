@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Crypto | Text File Benchmarks</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <h1><i class="fa fa-key"></i> crypto</h1>
+            <p>Simple symmetric GPG file encryption</p>
+
+            <p class="view"><a href="install.html">Install Guide <small>for Mac OSX and Linux</small></a>
+            </p>
+            <p class="view"><a href="quickstart.html">Quickstart Guide</a>
+            </p>
+            <p class="view"><a href="usage.html">Usage</a>
+            </p>
+            <p class="view"><a href="faq.html">FAQ</a>
+            </p>
+            <p class="view"><a href="issues.html">Issue Reporting</a>
+            </p>
+            <p class="view"><a href="changelog.html">Changelog</a>
+            </p>
+
+            <ul>
+                <li><a href="https://github.com/chrissimpkins/crypto/zipball/master">Download <strong>ZIP File</strong></a>
+                </li>
+                <li><a href="https://github.com/chrissimpkins/crypto/tarball/master">Download <strong>TAR Ball</strong></a>
+                </li>
+                <li><a href="https://github.com/chrissimpkins/crypto">View <strong>Source</strong></a>
+                </li>
+            </ul>
+        </header>
+
+        <section>
+
+            <h3>
+                <a id="text-file-bench" class="anchor" href="#text-file-bench" aria-hidden="true">
+                    <span class="octicon octicon-link"></span>
+                </a>Text File Benchmarks</h3>
+                <p>All tests were performed on a Late 2011 MacBook Pro (2.4GHz Intel Core i7, 8GB RAM) using gtime v1.7, gpg v2.0.22, and crypto v1.1.0.</p>
+                <p>Initial testing with gpg on text files, showed that there is a significant compression vs. speed tradeoff.  Using <a href="http://mattmahoney.net/dc/textdata.html">Matt Mahoney's enwik8 text file</a> (a 100MB English Wikipedia XML dump) and 10 MB, 1MB files generated from the head of this file, I tested encryption time vs. file size using gpg with four different compression settings. These tests were performed with the GNU time application (<code>gtime</code>) and time was defined as total CPU time (=user time + system time).</p>
+                <p>The tested compression options included <code>-z 0</code>, <code>-z 1</code>, <code>-z 7</code>, and <code>-z 9</code>.  These are indicated with the labels 1, 2, 3, and 4, respectively, on the x-axis of the figures below.  File size is indicated by the dark grey lines and total CPU time (user time + system time) is indicated by the light grey lines.</p>
+                <h5>100 MB Text File</h5>
+                <p>
+                <img src="img/time-v-compression-100mb-575.png" alt="100 MB Text File Speed vs. Compression Test">
+                </p>
+                <h5>10 MB Text File</h5>
+                <p>
+                <img src="img/time-v-compression-10mb-575.png" alt="10 MB Text File Speed vs. Compression Test">
+                </p>
+                <h5>1MB Text File</h5>
+                <p>
+                <img src="img/time-v-compression-1mb-575.png" alt="1 MB Text File Speed vs. Compression Test">
+                </p>
+                <p>
+                Because this is an encryption application and not a dedicated compression application, I elected to minimize the encryption time x file size product in order to achieve a balanced approach to text file handling in crypto.  Across each of these tested file sizes, that occurred at the <code>-z 1</code> compression level (indicated by 2 on the figures above).  At this level, there is a significant decrease in the encryption time relative to higher compression levels without a large file size compromise.  This is the default text file compression level in crypto.  Users who need more compression, can use the <code>--space</code> option which switches to the <code>-z 7</code> compression level.
+                </p>
+
+                <h4>Text File Benchmarks</h4>
+                <p>The text file benchmarks reported on the <a href="benchmarks.html">main benchmarks page</a> were performed on a directory of text files that included <a href="http://mattmahoney.net/dc/textdata.html">Matt Mahoney's enwik8 text test file</a> (100MB English Wikipedia XML dump), and 10MB, 5MB, 2MB, 1MB, and 10kB files that were derived from the head of this file.</p>
+                <p>The benchmark testing results for this directory of six text files are as follows:</p>
+                <img src="img/text-bench-575.png" alt="Text file benchmark testing in crypto">
+
+
+        </section>
+        <footer>
+            <p>
+                <p>
+                    <small>Developed by <a href="https://github.com/chrissimpkins">Chris Simpkins</a>
+                    </small>
+                    <br>
+                    <small>Hosted by <i class="fa fa-github"></i> GitHub</small>
+                </p>
+        </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+
+</body>
+
+</html>
