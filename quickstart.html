@@ -54,22 +54,29 @@
 
 <h3><i class="fa fa-lock"></i> Encryption</h3>
 
-<h4><i class="fa fa-circle"></i> By Filepath <i class="fa fa-circle"></i></h4>
+<h4><i class="fa fa-square"></i> By Filepath</h4>
 
 <h5>Encrypt a File</h5>
-<pre><code>$ crypto sometext.txt</code></pre>
+<pre><code>$ crypto somefile.txt</code></pre>
 
 <h5>Encrypt Multiple Files by Explicit Path</h5>
-<pre><code>$ crypto sometext.txt anotherimage.jpg</code></pre>
+<pre><code>$ crypto somefile.txt anotherimage.jpg</code></pre>
 
 <h5>Encrypt Multiple Files by Wildcard Expansion</h5>
 <pre><code>$ crypto *.txt</code></pre>
 
 <h5>Encrypt a File with Portable ASCII Armored Format</h5>
-<pre><code>$ crypto --armor sometext.txt</code></pre>
+<pre><code>$ crypto --armor somefile.txt</code></pre>
 
-<h4><i class="fa fa-circle"></i> By Directory <i class="fa fa-circle"></i></h4>
-<p>Encrypt all top level directory files that have not previously been encrypted.</p>
+<h5>Encrypt File with Prioritization of Encryption Speed Over File Size</h5>
+<pre><code>$ crypto --speed somefile.txt</code></pre>
+
+<h5>Encrypt File with Prioritization of Reduced File Size Over Encryption Speed</h5>
+<pre><code>$ crypto --space somefile.txt</code></pre>
+
+
+<h4><i class="fa fa-square"></i> By Directory</h4>
+<p>Encrypt all top level directory files that have not previously been encrypted.  The crypto options demonstrated above also work with directory arguments.</p>
 
 <h5>Encrypt Top Level Files in a Directory</h5>
 <pre><code>$ crypto privatedir</code></pre>
@@ -84,28 +91,28 @@
 
 <h3><i class="fa fa-unlock"></i> Decryption</h3>
 
-<h4><i class="fa fa-circle"></i> By Filepath <i class="fa fa-circle"></i></h4>
+<h4><i class="fa fa-square"></i> By Filepath</h4>
 
 <h5>Decrypt a File (.crypt file format)</h5>
-<pre><code>$ decrypto sometext.txt.crypt</code></pre>
+<pre><code>$ decrypto somefile.txt.crypt</code></pre>
 
 <h5>Decrypt a File (.gpg file format)</h5>
-<pre><code>$ decrypto sometext.txt.gpg</code></pre>
+<pre><code>$ decrypto somefile.txt.gpg</code></pre>
 
 <h5>Decrypt a File (.asc file format)</h5>
-<pre><code>$ decrypto sometext.txt.asc</code></pre>
+<pre><code>$ decrypto somefile.txt.asc</code></pre>
 
 <h5>Decrypt Multiple Files by Explicit Path</h5>
-<pre><code>$ decrypto sometext.txt.asc anotherfile.txt.crypt</code></pre>
+<pre><code>$ decrypto somefile.txt.asc anotherfile.txt.crypt</code></pre>
 
 <h5>Decrypt Multiple Files by Wildcard Expansion</h5>
 <pre><code>$ decrypto *.crypt</code></pre>
 
 <h5>Decrypt File Text to the Standard Output Stream</h5>
-<pre><code>$ decrypto --stdout sometext.txt.crypt</code></pre>
+<pre><code>$ decrypto --stdout somefile.txt.crypt</code></pre>
 
 
-<h4><i class="fa fa-circle"></i> By Directory<i class="fa fa-circle"></i></h4>
+<h4><i class="fa fa-square"></i> By Directory</h4>
 <p>Decrypt all top level encrypted files with a <code>.crypt</code>, <code>.gpg</code>, <code>.asc</code>, or <code>.pgp</code> file type.</p>
 
 <h5>Decrypt Files in a Single Directory</h5>
