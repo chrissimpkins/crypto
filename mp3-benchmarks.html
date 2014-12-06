@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Crypto | PDF File Benchmarks</title>
+    <title>Crypto | MP3 File Benchmarks</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -48,16 +48,14 @@
         <section>
 
             <h3>
-                <a id="pdf-benchmarks" class="anchor" href="#pdf-benchmarks" aria-hidden="true">
+                <a id="mp3-benchmarks" class="anchor" href="#mp3-benchmarks" aria-hidden="true">
                     <span class="octicon octicon-link"></span>
-                </a>PDF File Benchmarks</h3>
-                <p>All tests were performed on a Late 2011 MacBook Pro (2.4GHz Intel Core i7, 8GB RAM) using gtime v1.7, gpg v2.0.22, and crypto v1.1.0.</p>
-                <p>Use of compression with the <code>-z 1</code>, <code>-z 7</code>, and <code>-z 9</code> gpg options did not lead to a significant change in file size for pdf files. crypto disables compression for pdf files (and all other binary files) by default in order to improve encryption performance.</p>
-                <p>The PDF file tests were performed on a directory that contained a 84.8 MB and 12.2 MB set of pdf files.</p>
+                </a>MP3 File Benchmarks</h3>
+                <p>Use of compression with the <code>-z 1</code>, <code>-z 7</code>, and <code>-z 9</code> gpg options did not lead to a significant change in file size for mp3 files. crypto disables compression for mp3 files (and all other binary files) by default in order to improve encryption performance.</p>
+                <p>The mp3 file tests were performed on a directory that contained ten mp3 files that ranged in size from 3.5MB to 4.3MB.</p>
                 <p>The results were:</p>
-                <img src="img/pdf-bench-575.png" alt="PDF File Benchmarks">
-                <p>The total CPU time for the GPG Default, crypto Default, and crypto --speed runs were 4.73, 1.56, and 1.55 sec, respectively.</p>
-
+                <img src="img/mp3-bench-575.png" alt="MP3 File Benchmarks">
+                <p>The total CPU time for the GPG Default, crypto Default, and crypto --speed runs were 2.14, 0.80, and 0.77 sec, respectively.</p>
 
 
         </section>
