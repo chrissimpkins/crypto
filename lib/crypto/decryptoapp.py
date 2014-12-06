@@ -147,7 +147,7 @@ def main():
                 # begin decryption
                 if not skip_file:
                     if use_standard_output: # using --quiet flag to suppress stdout messages from gpg, just want the file data in stdout stream
-                        system_command = "gpg --batch --quiet --passphrase " + passphrase + " -d " + encrypted_file
+                        system_command = "gpg --batch --quiet --passphrase '" + passphrase + "' -d " + encrypted_file
                         successful_execution = execute(system_command) # use naked execute function to directly push to stdout, rather than return stdout
 
                         if not successful_execution:
@@ -159,7 +159,7 @@ def main():
                         else: # decryption successful but we are in stdout flag so do not include any other output from decrypto
                             pass
                     else:
-                        system_command = "gpg --batch -o " + decrypted_filename + " --passphrase " + passphrase + " -d " + encrypted_file
+                        system_command = "gpg --batch -o " + decrypted_filename + " --passphrase '" + passphrase + "' -d " + encrypted_file
                         response = muterun(system_command)
 
                         if response.exitcode == 0:
@@ -220,7 +220,7 @@ def main():
 
             # confirm that the passphrases match
             if passphrase == passphrase_confirm:
-                system_command = "gpg --batch -o " + new_filename + " --passphrase " + passphrase + " -d " + path
+                system_command = "gpg --batch -o " + new_filename + " --passphrase '" + passphrase + "' -d " + path
                 response = muterun(system_command)
                 # overwrite user entered passphrases
                 passphrase = ""
@@ -267,7 +267,7 @@ def main():
                     if file_exists(decrypted_filepath):
                         stdout("The file path '" + decrypted_filepath + "' already exists.  This file was not decrypted.")
                     else:
-                        system_command = "gpg --batch -o " + decrypted_filepath + " --passphrase " + passphrase + " -d " + absolute_filepath
+                        system_command = "gpg --batch -o " + decrypted_filepath + " --passphrase '" + passphrase + "' -d " + absolute_filepath
                         response = muterun(system_command)
 
                         if response.exitcode == 0:

@@ -49,7 +49,7 @@ class Cryptor(object):
                     command_stub = self.command_nocompress
 
         encrypted_outpath = self._create_outfilepath(inpath)
-        system_command = command_stub + encrypted_outpath + " --passphrase " + self.passphrase + " --symmetric " + inpath
+        system_command = command_stub + encrypted_outpath + " --passphrase '" + self.passphrase + "' --symmetric " + inpath
 
         try:
             response = muterun(system_command)
