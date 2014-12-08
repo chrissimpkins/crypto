@@ -5,6 +5,8 @@
 ## About
 crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm.
 
+Encryption benchmarks vs. default gpg encryption are available [here](http://chrissimpkins.github.io/crypto/benchmarks.html) with additional details for [text](http://chrissimpkins.github.io/crypto/text-benchmarks.html), [pdf](http://chrissimpkins.github.io/crypto/pdf-benchmarks.html), [mp3](http://chrissimpkins.github.io/crypto/mp3-benchmarks.html), and [png](http://chrissimpkins.github.io/crypto/png-benchmarks.html) mime types.
+
 ## Documentation
 
 Detailed documentation is available [here](http://chrissimpkins.github.io/crypto/index.html).
