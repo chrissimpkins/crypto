@@ -61,7 +61,7 @@ class Cryptor(object):
                 stderr("Encryption failed")
                 sys.exit(1)
         except Exception:
-            stderr("There was a problem with the excution of gpg. Encryption failed")
+            stderr("There was a problem with the execution of gpg. Encryption failed")
             sys.exit(1)
 
     #------------------------------------------------------------------------------

@@ -3,7 +3,7 @@ Documentation: http://chrissimpkins.github.io/crypto/
 Description
 -------------
 
-crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm.
+crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm. `Benchmarks relative to default gpg settings are available for text and binary file mime types <https://chrissimpkins.github.io/crypto/benchmarks.html>`_.
 
 Tested in cPython 2.7.x, 3.4.x, and pypy 2.4.x (Python version 2.7.8)
 

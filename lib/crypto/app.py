@@ -13,7 +13,6 @@ def main():
     import getpass
     from Naked.commandline import Command
     from Naked.toolshed.shell import muterun
-    #from Naked.toolshed.state import StateObject
     from Naked.toolshed.system import dir_exists, directory, filename, file_exists, list_all_files, make_path, stdout, stderr
 
     #------------------------------------------------------------------------------------------
@@ -21,10 +20,6 @@ def main():
     #   used for all subsequent conditional logic in the CLI application
     #------------------------------------------------------------------------------------------
     c = Command(sys.argv[0], sys.argv[1:])
-    #------------------------------------------------------------------------------
-    # [ Instantiate state object ]
-    #------------------------------------------------------------------------------
-    # state = StateObject()
     #------------------------------------------------------------------------------------------
     # [ VALIDATION LOGIC ] - early validation of appropriate command syntax
     # Test that user entered at least one argument to the executable, print usage if not

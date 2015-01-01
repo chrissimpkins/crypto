@@ -11,7 +11,7 @@ app_name = 'crypto'
 #------------------------------------------------------------------------------
 major_version = "1"
 minor_version = "1"
-patch_version = "2"
+patch_version = "3"
 
 #------------------------------------------------------------------------------
 # Debug Flag (switch to False for production release code)
