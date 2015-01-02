@@ -53,7 +53,7 @@ help = """
 -------------------------------------------------
 crypto
 Simple symmetric GPG file encryption
-Copyright 2014 Christopher Simpkins
+Copyright 2015 Christopher Simpkins
 MIT license
 Source: https://github.com/chrissimpkins/crypto
 Docs: http://chrissimpkins.github.io/crypto/
@@ -71,8 +71,9 @@ USAGE
     decrypto <options> [file path] <file path...>
     decrypto <options> [directory path] <directory path...>
 
-CRYPTO OPTION
+CRYPTO OPTIONS
    --armor | -a          Use a portable ASCII armored encryption format
+   --hash                Generate SHA256 hash digest of encrypted file(s)
    --space               Favor reduced file size over encryption speed
    --speed               Favor encryption speed over reduced file size
 
