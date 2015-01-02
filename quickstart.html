@@ -74,6 +74,9 @@
 <h5>Encrypt File with Prioritization of Reduced File Size Over Encryption Speed</h5>
 <pre><code>$ crypto --space somefile.txt</code></pre>
 
+<h5>Encrypt File and Report SHA256 Hash Digest for the Encrypted File</h5>
+<pre><code>$ crypto --hash somefile.txt</code></pre>
+
 
 <h4><i class="fa fa-square"></i> By Directory</h4>
 <p>Encrypt all top level directory files that have not previously been encrypted.  The crypto options demonstrated above also work with directory arguments.</p>
@@ -83,6 +86,9 @@
 
 <h5>Encrypt Top Level Files in More Than One Directory</h5>
 <pre><code>$ crypto imagedir privatedir</code></pre>
+
+<h5>Encrypt Top Level Files in a Directory and Report SHA256 Hash Digests</h5>
+<pre><code>$ crypto --hash privatedir</code></pre>
 
 
 <br>

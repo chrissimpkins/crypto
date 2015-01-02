@@ -52,13 +52,13 @@
                     <span class="octicon octicon-link"></span>
                 </a>FAQ</h3>
 
-<h4 id="#encryption-algo">What encryption cipher algorithm does crypto use?</h4>
+<h4 id="encryption-algo">What encryption cipher algorithm does crypto use?</h4>
 <p>Encryption is performed with the AES256 cipher algorithm.</p>
 
-<h4 id="#decryption-algo">What decryption cipher algorithms does crypto support?</h4>
+<h4 id="decryption-algo">What decryption cipher algorithms does crypto support?</h4>
 <p>This depends upon your version of <code>gpg</code>.  If you are using a current version, IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH, CAMELLIA128, CAMELLIA192, and CAMELLIA256 are supported.</p>
 
-<h4 id="#crypto-speed">Is crypto faster than gpg?</h4>
+<h4 id="crypto-speed">Is crypto faster than gpg?</h4>
 <p>crypto helps you to use gpg in a 'smart' fashion and does lead to a significant improvement in encryption performance for both text and binary files when compared with the default gpg settings.  Benchmarks are available <a href="benchmarks.html">here</a>.  gpg is still the encryption and decryption engine.  crypto adds a jet pack kit.</p>
 
 <h4>Will decrypto decrypt files that are encrypted with gpg?</h4>
@@ -67,11 +67,14 @@
 <h4>Will decrypto decrypt ASCII armored files created by gpg?</h4>
 <p>Yes</p>
 
-<h4 id="#gpg2">I use <code>gpg2</code> and crypto does not work.  How do I fix this?</h4>
+<h4 id="gpg2">I use <code>gpg2</code> and crypto does not work.  How do I fix this?</h4>
 <p>Make the following alias:</p>
 <p><pre><code>alias gpg="gpg2"</code></pre></p>
 
-<h4 id="#support">I am having a problem with crypto and need help.  What should I do?</h4>
+<h4 id="file-integrity-hash-switch">How can I confirm the integrity of my encrypted files?</h4>
+<p>Use the <code>--hash</code> switch during encryption and crypto will report the SHA256 hash digest of your encrypted file(s).  You can compare this hash digest with a new one that is generated from a potentially modified version of the file using one of the many available applications.  For instance with <code>shasum</code>, the command would be <code>shasum -a 256 &lt;yourfile&gt;</code>.  If the hash digests are not identical, the file has been modified after you generated the original encrypted file with crypto.</p>
+
+<h4 id="support">I am having a problem with crypto and need help.  What should I do?</h4>
 <p><a href="issues.html">Please submit an issue report on the GitHub repository</a>.</p>
 
 
