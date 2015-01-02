@@ -35,7 +35,7 @@ $ crypto *.txt
 
 #### Encrypt and Generate SHA256 Hash Digest of the Encrypted File
 ```
-# crypto --hash sometext.txt
+$ crypto --hash sometext.txt
 ```
 
 #### Encrypt All Top Level Files in Multiple Directories with Same Passphrase
