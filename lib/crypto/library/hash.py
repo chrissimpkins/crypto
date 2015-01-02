@@ -4,11 +4,18 @@
 import hashlib
 from Naked.toolshed.file import FileReader
 
-def generate_hash(filepath, hash="sha256"):
+#------------------------------------------------------------------------------
+# PUBLIC
+#------------------------------------------------------------------------------
+def generate_hash(filepath):
     fr = FileReader(filepath)
     data = fr.read_bin()
-    if hash == "sha256":
-        return calculate_sha256(data)
+    return _calculate_sha256(data)
 
-def calculate_sha256(binary_string):
+
+#------------------------------------------------------------------------------
+# PRIVATE
+#------------------------------------------------------------------------------
+def _calculate_sha256(binary_string):
     return hashlib.sha256(binary_string).hexdigest()
+
