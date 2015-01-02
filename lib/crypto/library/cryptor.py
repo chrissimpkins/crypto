@@ -26,7 +26,7 @@ class Cryptor(object):
     #------------------------------------------------------------------------------
     # encrypt_file : file encryption method
     #------------------------------------------------------------------------------
-    def encrypt_file(self, inpath, force_nocompress=False, force_compress=False, armored=False):
+    def encrypt_file(self, inpath, force_nocompress=False, force_compress=False, armored=False, checksum=False):
         if armored:
             if force_compress:
                 command_stub = self.command_maxcompress_armored
@@ -56,6 +56,11 @@ class Cryptor(object):
             # check returned status code
             if response.exitcode == 0:
                 stdout(encrypted_outpath + " was generated from " + inpath)
+                if checksum: # add a SHA256 hash digest of the encrypted file - requested by user --hash flag in command
+                    from crypto.library import hash
+                    encrypted_file_hash = hash.generate_hash(encrypted_outpath)
+                    stdout("SHA256 hash digest for " + encrypted_outpath + " :")
+                    stdout(encrypted_file_hash)
             else:
                 stderr(response.stderr, 0)
                 stderr("Encryption failed")
@@ -67,9 +72,9 @@ class Cryptor(object):
     #------------------------------------------------------------------------------
     # encrypt_files : multiple file encryption
     #------------------------------------------------------------------------------
-    def encrypt_files(self, file_list, force_nocompress=False, force_compress=False, armored=False):
+    def encrypt_files(self, file_list, force_nocompress=False, force_compress=False, armored=False, checksum=False):
         for the_file in file_list:
-            self.encrypt_file(the_file, force_nocompress, force_compress, armored)
+            self.encrypt_file(the_file, force_nocompress, force_compress, armored, checksum)
 
 
     #------------------------------------------------------------------------------
