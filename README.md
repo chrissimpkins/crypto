@@ -33,6 +33,11 @@ $ crypto sometext.txt anotherimage.jpg
 $ crypto *.txt
 ```
 
+#### Encrypt and Generate SHA256 Hash Digest of the Encrypted File
+```
+# crypto --hash sometext.txt
+```
+
 #### Encrypt All Top Level Files in Multiple Directories with Same Passphrase
 ```
 $ crypto imagedir privatedir
@@ -92,6 +97,10 @@ python setup.py install
 #### `--armor | -a`
 
 Encrypt in a portable ASCII armored format
+
+#### `--hash`
+
+Generate SHA256 hash digest of encrypted file(s)
 
 #### `--space`
 
