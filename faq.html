@@ -72,7 +72,9 @@
 <p><pre><code>alias gpg="gpg2"</code></pre></p>
 
 <h4 id="file-integrity-hash-switch">How can I confirm the integrity of my encrypted files?</h4>
-<p>Use the <code>--hash</code> switch during encryption and crypto will report the SHA256 hash digest of your encrypted file(s).  You can compare this hash digest with a new one that is generated from a potentially modified version of the file using one of the many available applications.  For instance with <code>shasum</code>, the command would be <code>shasum -a 256 &lt;yourfile&gt;</code>.  If the hash digests are not identical, the file has been modified after you generated the original encrypted file with crypto.</p>
+<p>Use the <code>--hash</code> switch during encryption and crypto will report the SHA256 hash digest of your encrypted file(s).  You can compare this hash digest with a new one that is generated from a potentially modified version of the file using one of the many available checksum type applications.  For instance with <a href="https://chrissimpkins.github.io/hsh/">hsh</a> (shameless plug...), you can enter the following to obtain a SHA256 hash digest:
+<pre><code>$ hsh &lt;yourfile&gt;</code></pre>
+If the hash digests are not identical, the file has been modified after you generated the original encrypted file with crypto.</p>
 
 <h4 id="support">I am having a problem with crypto and need help.  What should I do?</h4>
 <p><a href="issues.html">Please submit an issue report on the GitHub repository</a>.</p>
