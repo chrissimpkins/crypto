@@ -5,6 +5,7 @@ TEST_COMMAND="nosetests"
 
 # Testing scripts
 ASCII_FILE="test_ascii-armored.py"
+COMPRESS_CHECK="test_compression-checks.py"
 DECRYPT_SINGLE_FILE="test_decrypt-single-file.py"
 DECRYPT_MULTI_FILE="test_decrypt-multi-file.py"
 DECRYPT_SINGLE_DIR="test_decrypt-single-directory.py"
@@ -20,6 +21,8 @@ if [ "$1" = "all" ];then
 	"$TEST_COMMAND" "$NOSE_FLAGS" "$SINGLE_FILE" "$SINGLE_DIR"
 elif [ "$1" = "ascii" ];then
 	"$TEST_COMMAND" "$NOSE_FLAGS" "$ASCII_FILE"
+elif [ "$1" = "compress" ];then
+	"$TEST_COMMAND" "$NOSE_FLAGS" "$COMPRESS_CHECK"
 elif [ "$1" = "decrypt-dir" ];then
 	"$TEST_COMMAND" "$NOSE_FLAGS" "$DECRYPT_SINGLE_DIR"
 elif [ "$1" = "decrypt-dirs" ];then
