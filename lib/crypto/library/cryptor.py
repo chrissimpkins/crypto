@@ -10,6 +10,7 @@ from Naked.toolshed.system import dir_exists, directory, filename, file_exists, 
 #   performs gpg encryption of one or more files
 #------------------------------------------------------------------------------
 class Cryptor(object):
+    """performs gpg encryption of one or more files"""
     def __init__(self, passphrase):
         self.command_default = "gpg -z 1 --batch --force-mdc --cipher-algo AES256 -o "
         self.command_nocompress = "gpg -z 0 --batch --force-mdc --cipher-algo AES256 -o "
@@ -27,6 +28,7 @@ class Cryptor(object):
     # encrypt_file : file encryption method
     #------------------------------------------------------------------------------
     def encrypt_file(self, inpath, force_nocompress=False, force_compress=False, armored=False, checksum=False):
+        """public method for single file encryption with optional compression, ASCII armored formatting, and file hash digest generation"""
         if armored:
             if force_compress:
                 command_stub = self.command_maxcompress_armored
@@ -76,6 +78,7 @@ class Cryptor(object):
     # encrypt_files : multiple file encryption
     #------------------------------------------------------------------------------
     def encrypt_files(self, file_list, force_nocompress=False, force_compress=False, armored=False, checksum=False):
+        """public method for multiple file encryption with optional compression, ASCII armored formatting, and file hash digest generation"""
         for the_file in file_list:
             self.encrypt_file(the_file, force_nocompress, force_compress, armored, checksum)
 
@@ -83,6 +86,7 @@ class Cryptor(object):
     # cleanup : overwrite the passphrase in memory
     #------------------------------------------------------------------------------
     def cleanup(self):
+        """public method taht overwrites user passphrase in memory"""
         self.passphrase = ""
 
     #------------------------------------------------------------------------------
@@ -90,9 +94,11 @@ class Cryptor(object):
     #------------------------------------------------------------------------------
 
     def _create_outfilepath(self, inpath):
+        """private method that generates the crypto saved file path string with a .crypt file type"""
         return inpath + '.crypt'
 
     def _is_compress_filetype(self, inpath):
+        """private method that performs magic number and size check on file to determine whether to compress the file"""
         # files > 10kB get checked for compression
         if file_size(inpath) > 10240:
             try:
