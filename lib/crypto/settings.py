@@ -56,7 +56,7 @@ Simple symmetric GPG file encryption
 Copyright 2015 Christopher Simpkins
 MIT license
 Source: https://github.com/chrissimpkins/crypto
-Docs: http://chrissimpkins.github.io/crypto/
+Docs: https://chrissimpkins.github.io/crypto/
 -------------------------------------------------
 
 ABOUT
