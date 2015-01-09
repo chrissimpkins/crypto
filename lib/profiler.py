@@ -12,6 +12,17 @@ def profile():
     # Enter setup code below
     #------------------------------------------------------------------------------
         # Optional: include setup code here
+        
+    import os
+    from crypto.library.cryptor import Cryptor
+    from Naked.toolshed.system import list_all_files, make_path
+    c = Cryptor("test")
+    test_dir = make_path(os.path.expanduser('~'), 'Desktop', 'profiletests')
+    the_file_list = list_all_files(test_dir)
+    x = 0
+    for i in the_file_list:
+        the_file_list[x] = make_path(test_dir, i)
+        x += 1
 
 
     #------------------------------------------------------------------------------
@@ -24,7 +35,7 @@ def profile():
     #------------------------------------------------------------------------------
         # include profiled code here
 
-
+    c.encrypt_files(the_file_list)
     #------------------------------------------------------------------------------
     # END profiled code block
     #------------------------------------------------------------------------------
