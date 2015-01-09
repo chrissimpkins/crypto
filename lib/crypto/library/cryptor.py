@@ -86,7 +86,7 @@ class Cryptor(object):
     # cleanup : overwrite the passphrase in memory
     #------------------------------------------------------------------------------
     def cleanup(self):
-        """public method taht overwrites user passphrase in memory"""
+        """public method that overwrites user passphrase in memory"""
         self.passphrase = ""
 
     #------------------------------------------------------------------------------
