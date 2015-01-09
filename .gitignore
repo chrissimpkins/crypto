@@ -51,11 +51,7 @@ docs/_build/
 
 # PyBuilder
 target/
-<<<<<<< .merge_file_j55w7Z
-crypto.wpu
-=======
 
 # Wing IDE local files (SHOULD commit .wpr files)
 *.wpu
 
->>>>>>> .merge_file_aan7Ka
