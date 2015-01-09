@@ -1,5 +1,5 @@
 TODO:
 
-
+- provide option to eliminate the file mime type suffix string on the encrypted file
 
 - 2.0.0 : support multi-part encrypted files with local encrypted compiler (.shard)
