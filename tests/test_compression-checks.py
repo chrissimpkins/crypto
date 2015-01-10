@@ -14,14 +14,15 @@ class CryptoCompressionCheckTest(unittest.TestCase):
         self.gz_file = "test.tar.gz"
         self.png_file = "test.png"
         self.jpg_file = "test.jpg"
+        self.flac_file = "test.flac"
         self.txt_file = "test.txt"
+        self.c_file = "test.c"
         self.py_file = "test.py"
+        self.yaml_file = "test.yaml"
         self.nosuffix_file = "test"
 
     def tearDown(self):
         pass
-    
-    # TODO: add file types with different length suffixes
     
     # binary file checks
     
@@ -60,8 +61,22 @@ class CryptoCompressionCheckTest(unittest.TestCase):
         self.assertTrue(response_bin)
         self.assertFalse(response_txt)
         
+    def test_binary_flac_check(self):
+        c = Cryptor("passphrase")
+        response_bin = c._is_common_binary(self.flac_file)
+        response_txt = c._is_common_text(self.flac_file)
+        self.assertTrue(response_bin)
+        self.assertFalse(response_txt)        
+        
     # text file checks
     
+    def test_text_yaml_check(self):
+        c = Cryptor("passphrase")
+        response_bin = c._is_common_binary(self.yaml_file)
+        response_txt = c._is_common_text(self.yaml_file)
+        self.assertFalse(response_bin)
+        self.assertTrue(response_txt)
+        
     def test_text_txt_check(self):
         c = Cryptor("passphrase")
         response_bin = c._is_common_binary(self.txt_file)
@@ -75,6 +90,14 @@ class CryptoCompressionCheckTest(unittest.TestCase):
         response_txt = c._is_common_text(self.py_file)
         self.assertFalse(response_bin)
         self.assertTrue(response_txt)
+        
+    def test_text_c_check(self):
+        c = Cryptor("passphrase")
+        response_bin = c._is_common_binary(self.c_file)
+        response_txt = c._is_common_text(self.c_file)
+        self.assertFalse(response_bin)
+        self.assertTrue(response_txt)        
+        
         
     # test is_common_binary & _is_common_text function with file without file type suffix in the file name
         
