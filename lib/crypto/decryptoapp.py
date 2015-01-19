@@ -11,6 +11,7 @@
 def main():
     import os
     import sys
+    from time import sleep
     import getpass
     from Naked.commandline import Command
     from Naked.toolshed.shell import execute, muterun
@@ -178,6 +179,9 @@ def main():
             passphrase = ""
             passphrase_confirm = ""
 
+            # add a short pause to hinder brute force pexpect style password attacks with decrypto
+            sleep(0.2)  # 200ms pause
+
         else: # passphrases did not match
             passphrase = ""
             passphrase_confirm = ""
@@ -225,8 +229,10 @@ def main():
                     stdout("Decryption complete")
                     sys.exit(0)
                 else:
-                    stderr(response.stderr, 0)
+                    stderr(response.stderr)
                     stderr("Decryption failed")
+                    # add a short pause to hinder brute force pexpect style password attacks with decrypto
+                    sleep(0.2)  # 200ms pause
                     sys.exit(1)
             else:
                 stderr("The passphrases did not match.  Please enter your command again.")
@@ -273,6 +279,9 @@ def main():
                 # overwrite user entered passphrases
                 passphrase = ""
                 passphrase_confirm = ""
+
+                # add a short pause to hinder brute force pexpect style password attacks with decrypto
+                sleep(0.2)  # 200ms pause
             else:
                 # overwrite user entered passphrases
                 passphrase = ""
