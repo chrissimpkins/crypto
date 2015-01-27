@@ -19,7 +19,7 @@ class Cryptor(object):
         self.command_nocompress_armored = "gpg -z 0 --armor --batch --force-mdc --cipher-algo AES256 -o "
         self.command_maxcompress_armored = "gpg -z 7 --armor --batch --force-mdc --cipher-algo AES256 -o "
         self.passphrase = passphrase
-        self.common_binaries = set(['.7z', '.gz', '.app', '.avi', '.bz2', '.deb', '.doc', '.dmg', '.exe', '.flv', '.gif', '.jar', '.jpg', '.mov', '.mp3', '.mp4', '.odt', '.ogg', '.pdf', '.pkg', '.png', '.ppt', '.pps', '.psd', '.rar', '.rpm', '.tar', '.tif', '.wav', '.wmv', '.xls', '.zip', '.docx', '.epub', '.flac', '.mpeg', '.jpeg', '.pptx', '.xlsx'])
+        self.common_binaries = set(['.7z', '.gz', '.aac', '.app', '.avi', '.bz2', '.deb', '.doc', '.dmg', '.exe', '.flv', '.gif', '.jar', '.jpg', '.mov', '.mp3', '.mp4', '.odt', '.oga', '.ogg', '.pdf', '.pkg', '.png', '.ppt', '.pps', '.psd', '.rar', '.rpm', '.tar', '.tif', '.wav', '.wma', '.wmv', '.xls', '.zip', '.aiff', '.docx', '.epub', '.flac', '.mpeg', '.jpeg', '.pptx', '.xlsx'])
         self.common_text = set(['.c', '.h', '.m', '.cc', '.js', '.pl', '.py', '.rb', '.sh', '.cpp', '.css', '.csv', '.php', '.rss', '.txt', '.xml', '.yml', '.java', '.json', '.html', '.yaml'])
 
     #------------------------------------------------------------------------------
