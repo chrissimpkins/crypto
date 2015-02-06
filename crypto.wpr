@@ -1,0 +1,31 @@
+#!wing
+#!version=5.0
+##################################################################
+# Wing IDE project file                                          #
+##################################################################
+[project attributes]
+console.toolbox = [{'autosave': False,
+                    'cmd': 'naked test tox',
+                    'env': ('project',
+                            [u'']),
+                    'id': 'cmd-7xhzxCe53X0S7uQZ',
+                    'io_encoding': None,
+                    'key_binding': '',
+                    'line_mode': True,
+                    'pseudo_tty': False,
+                    'pypath': ('project',
+                               ''),
+                    'raise_panel': True,
+                    'rundir': ('project',
+                               u''),
+                    'title': 'Naked test tox'}]
+proj.directory-list = [{'dirloc': loc('.'),
+                        'excludes': (),
+                        'filter': u'*',
+                        'include_hidden': False,
+                        'recursive': True,
+                        'watch_for_changes': True}]
+proj.file-type = 'shared'
+testing.auto-test-file-specs = (('glob',
+                                 'test_*.py'),)
+testing.test-framework = {None: 'nose'}
