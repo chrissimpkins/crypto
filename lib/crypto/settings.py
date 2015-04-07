@@ -76,6 +76,7 @@ CRYPTO OPTIONS
    --hash                Generate SHA256 hash digest of encrypted file(s)
    --space               Favor reduced file size over encryption speed
    --speed               Favor encryption speed over reduced file size
+   --tar                 Create tar archives of folders before encryption
 
 DECRYPTO OPTIONS
    --overwrite | -o      Overwrite an existing file with the decrypted file

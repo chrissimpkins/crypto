@@ -72,8 +72,14 @@ def main():
         if c.option('--hash'):
             report_checksum = True
 
+        ## TAR FOLDERS
+        tar_folders = False
+        if c.option('--tar'):
+            tar_folders = True
+
         path_list = [] # user entered paths from command line
         directory_list = [] # directory paths included in the user entered paths from the command line
+        tar_folder_list = [] # directories, which need to be packaged as tar archives
         file_list = [] # file paths included in the user entered paths from the command line (and inside directories entered)
 
         # dot and .crypt file flags for exclusion testing
@@ -92,17 +98,25 @@ def main():
 
         # add all file paths from user specified directories to the file_list
         if len(directory_list) > 0:
-            for directory in directory_list:
-                directory_file_list = list_all_files(directory)
-                for contained_file in directory_file_list:
-                    if contained_file[0] == ".":
-                        contained_dot_file = True # change the flag + is not included in file_list intentionally (no dot files)
-                    elif contained_file.endswith('.crypt'):
-                        contained_crypt_file = True # change the flag + is not included in file_list intentionally (no previously encrypted files)
-                    else:
-                        # otherwise add to the list for encryption
-                        contained_file_path = make_path(directory, contained_file)
-                        file_list.append(contained_file_path)
+            if not tar_folders:
+                for directory in directory_list:
+                    directory_file_list = list_all_files(directory)
+                    for contained_file in directory_file_list:
+                        if contained_file[0] == ".":
+                            contained_dot_file = True # change the flag + is not included in file_list intentionally (no dot files)
+                        elif contained_file.endswith('.crypt'):
+                            contained_crypt_file = True # change the flag + is not included in file_list intentionally (no previously encrypted files)
+                        else:
+                            # otherwise add to the list for encryption
+                            contained_file_path = make_path(directory, contained_file)
+                            file_list.append(contained_file_path)
+            else:
+                # create (uncompressed) tar archive for every targeted folder and add the resulting archive to the file_list
+                # do not start tar file creation, yet (!) - it is more convenient for the user to first enter the passphrase then start processing
+                for directory in directory_list:
+                    directory_file_path = directory + '.tar'
+                    tar_folder_list.append(directory)
+                    file_list.append(directory_file_path)
 
         # confirm that there are files to be encrypted, if not warn user
         if len(file_list) == 0:
@@ -119,7 +133,19 @@ def main():
                 stderr("You did not enter a passphrase. Please repeat your command and try again.")
                 sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
+
             if passphrase == passphrase_confirm:
+
+                # create temporary tar-files
+                tar_list = []
+                if len(tar_folder_list) > 0:
+                    from crypto.library import package
+                    tar_list = package.generate_tar_files(tar_folder_list)
+                    for t in tar_list:
+                        if not t in file_list:
+                            stderr("Tar archive creation resulted in errors.")
+                            sys.exit(1)
+
                 from crypto.library.cryptor import Cryptor
                 the_cryptor = Cryptor(passphrase)
 
@@ -143,6 +169,11 @@ def main():
                 passphrase = ""
                 passphrase_confirm = ""
                 the_cryptor.cleanup()
+
+                # tmp tar file removal
+                if len(tar_list) > 0:
+                    from crypto.library import package
+                    package.remove_tar_files(tar_list)
             else:
                 # passphrases did not match, report to user and abort
                 # overwrite user entered passphrases
