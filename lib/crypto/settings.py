@@ -30,6 +30,11 @@ Encrypt by explicit file path:
 Encrypt all top level files in directory:
 -----------------------------------------
   crypto <options> [directory path] <directory path 2...>
+  
+  
+Create a tar archive from directory and encrypt the archive:
+-----------------------------------------------------------
+  crypto --tar [directory path] <directory path 2...>
 
 
 Decrypt by explicit file path:
@@ -76,7 +81,7 @@ CRYPTO OPTIONS
    --hash                Generate SHA256 hash digest of encrypted file(s)
    --space               Favor reduced file size over encryption speed
    --speed               Favor encryption speed over reduced file size
-   --tar                 Create tar archives of folders before encryption
+   --tar                 Create tar archives of directories before encryption
 
 DECRYPTO OPTIONS
    --overwrite | -o      Overwrite an existing file with the decrypted file
