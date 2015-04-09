@@ -3,47 +3,43 @@
 
 import os
 import tarfile
-from Naked.toolshed.file import FileReader
-from Naked.toolshed.system import make_path, stdout, stderr
+from Naked.toolshed.system import stderr, dir_exists, file_exists
 
 #------------------------------------------------------------------------------
 # PUBLIC
 #------------------------------------------------------------------------------
-def generate_tar_files(file_list):
-    """Public function that reads a list of local folders (or files) and generates tar archives from it"""
-    # this initial check may be removed as we previously already checked, if this file exists
-    # and if the user has moved it in the meantime, we will fail below anyway
-    for f in file_list:
-        if not os.path.exists(f):
-            stderr("Expected file/folder for tar archive creation did not exist.")
-            return False
 
+
+def generate_tar_files(directory_list):
+    """Public function that reads a list of local directories and generates tar archives from them"""
+    
     tar_file_list = []
 
-    for f in file_list:
-        if _generate_tar(f):
-            tar_file_list.append(f+'.tar')
+    for directory in directory_list:
+        if dir_exists(directory):
+            _generate_tar(directory)                  # create the tar archive
+            tar_file_list.append(directory + '.tar')  # append the tar archive filename to the returned tar_file_list list
+        else:
+            stderr("The directory '" + directory + "' does not exist and a tar archive could not be created from it.", exit=1)            
 
     return tar_file_list
 
+
 def remove_tar_files(file_list):
+    """Public function that removes temporary tar archive files in a local directory"""
     for f in file_list:
-        if not os.path.exists(f) or not f.endswith('.tar'):
-            stderr("Expected tar archive not found.")
-            #continue
-        else:
-            os.remove(f)
+        if file_exists(f) and f.endswith('.tar'):
+            os.remove(f)  # remove any tar files in the list, if it does not appear to be a tar file, leave it alone
 
 #------------------------------------------------------------------------------
 # PRIVATE
 #------------------------------------------------------------------------------
-def _generate_tar(filepath):
-    """Private function that reads a local folder (or file) and generates a tar archive from it"""
-    try:
-        with tarfile.open(filepath+'.tar', 'w') as tar:
-            tar.add(filepath)
-    except tarfile.TarError, e:
-        stderr("Error: TAR file creation failed [" + str(e) + "]")
-        return False
 
-    return True
+
+def _generate_tar(dir_path):
+    """Private function that reads a local directory and generates a tar archive from it"""
+    try:
+        with tarfile.open(dir_path + '.tar', 'w') as tar:
+            tar.add(dir_path)
+    except tarfile.TarError as e:
+        stderr("Error: tar archive creation failed [" + str(e) + "]", exit=1)

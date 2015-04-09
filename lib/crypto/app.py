@@ -8,12 +8,13 @@
 #------------------------------------------------------------------------------
 
 # Application start
+
+
 def main():
     import sys
     import getpass
     from Naked.commandline import Command
-    from Naked.toolshed.shell import muterun
-    from Naked.toolshed.system import dir_exists, directory, filename, file_exists, list_all_files, make_path, stdout, stderr
+    from Naked.toolshed.system import dir_exists, file_exists, list_all_files, make_path, stderr
 
     #------------------------------------------------------------------------------------------
     # [ Instantiate command line object ]
@@ -41,7 +42,7 @@ def main():
         from crypto.settings import usage as crypto_usage
         print(crypto_usage)
         sys.exit(0)
-    elif c.version(): # User requested crypto version information
+    elif c.version():  # User requested crypto version information
         from crypto.settings import app_name, major_version, minor_version, patch_version
         version_display_string = app_name + ' ' + major_version + '.' + minor_version + '.' + patch_version
         print(version_display_string)
@@ -51,7 +52,7 @@ def main():
     #
     #------------------------------------------------------------------------------------------
     elif c.argc > 1:
-    # code for multi-file processing and commands that include options
+        # code for multi-file processing and commands that include options
         ## ASCII ARMOR SWITCH
         ascii_armored = False
         if c.option('--armor') or c.option('-a'):
@@ -72,14 +73,13 @@ def main():
         if c.option('--hash'):
             report_checksum = True
 
-        ## TAR FOLDERS
+        ## TAR FOLDERS SWITCH
         tar_folders = False
         if c.option('--tar'):
             tar_folders = True
 
-        path_list = [] # user entered paths from command line
         directory_list = [] # directory paths included in the user entered paths from the command line
-        tar_folder_list = [] # directories, which need to be packaged as tar archives
+        tar_directory_list = [] # directories, which need to be packaged as tar archives
         file_list = [] # file paths included in the user entered paths from the command line (and inside directories entered)
 
         # dot and .crypt file flags for exclusion testing
@@ -115,12 +115,12 @@ def main():
                 # do not start tar file creation, yet (!) - it is more convenient for the user to first enter the passphrase then start processing
                 for directory in directory_list:
                     directory_file_path = directory + '.tar'
-                    tar_folder_list.append(directory)
+                    tar_directory_list.append(directory)
                     file_list.append(directory_file_path)
 
         # confirm that there are files to be encrypted, if not warn user
         if len(file_list) == 0:
-            if contained_dot_file == True or contained_crypt_file == True:
+            if contained_dot_file is True or contained_crypt_file is True:
                 stderr("There were no files identified for encryption.  crypto does not encrypt dot files or previously encrypted '.crypt' files.")
                 sys.exit(1)
             else:
@@ -138,13 +138,16 @@ def main():
 
                 # create temporary tar-files
                 tar_list = []
-                if len(tar_folder_list) > 0:
+                if len(tar_directory_list) > 0:
                     from crypto.library import package
-                    tar_list = package.generate_tar_files(tar_folder_list)
+                    tar_list = package.generate_tar_files(tar_directory_list)
                     for t in tar_list:
-                        if not t in file_list:
-                            stderr("Tar archive creation resulted in errors.")
-                            sys.exit(1)
+                        if t not in file_list:  # check to confirm that the tar archive is in the list of files to encrypt
+                            if file_exists(t):
+                                # append the tarfile to the file_list for encryption if it was not included in the file list for encryption
+                                file_list.append(t)
+                            else:
+                                stderr("There was an error with the tar archive creation.  Please try again.", exit=1)
 
                 from crypto.library.cryptor import Cryptor
                 the_cryptor = Cryptor(passphrase)
@@ -170,7 +173,7 @@ def main():
                 passphrase_confirm = ""
                 the_cryptor.cleanup()
 
-                # tmp tar file removal
+                # tmp tar file removal (generated with package.generate_tar_files function above)
                 if len(tar_list) > 0:
                     from crypto.library import package
                     package.remove_tar_files(tar_list)
