@@ -15,7 +15,7 @@ def main():
     import getpass
     from Naked.commandline import Command
     from Naked.toolshed.shell import execute, muterun
-    from Naked.toolshed.system import dir_exists, directory, filename, file_exists, list_all_files, make_path, stdout, stderr
+    from Naked.toolshed.system import dir_exists, file_exists, list_all_files, make_path, stdout, stderr
 
     #------------------------------------------------------------------------------------------
     # [ Instantiate command line object ]
@@ -53,7 +53,7 @@ def main():
     #
     #------------------------------------------------------------------------------------------
     elif c.argc > 1:
-    # code for multi-file processing and commands that include options
+        # code for multi-file processing and commands that include options
         use_standard_output = False # print to stdout flag
         use_file_overwrite = False # overwrite existing files
 
@@ -205,7 +205,7 @@ def main():
                 stdout("Could not confirm that the requested file is encrypted based upon the file type.  Attempting decryption.  Keep your fingers crossed...")
 
             # confirm that the decrypted path does not already exist, if so abort with warning message to user
-            if check_existing_file == True:
+            if check_existing_file is True:
                 if file_exists(new_filename):
                     stderr("Your file will be decrypted to '" + new_filename + "' and this file path already exists.  Please move the file or use the --overwrite option with your command if you intend to replace the current file.")
                     sys.exit(1)
