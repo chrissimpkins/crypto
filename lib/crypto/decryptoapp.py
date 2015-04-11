@@ -56,12 +56,15 @@ def main():
         # code for multi-file processing and commands that include options
         use_standard_output = False # print to stdout flag
         use_file_overwrite = False # overwrite existing files
+        untar_files = False # automatically untar files
 
         # set user option flags
         if c.option('--stdout') or c.option('-s'):
             use_standard_output = True
         if c.option('--overwrite') or c.option('-o'):
             use_file_overwrite = True
+        if c.option('--untar'):
+            untar_files = True
 
         directory_list = [] # directory paths included in the user entered paths from the command line
         file_list = [] # file paths included in the user entered paths from the command line (and inside directories entered)
@@ -174,6 +177,32 @@ def main():
                     tmp_filename = decrypted_filename + '.tmp'
                     if file_exists(tmp_filename):
                         os.remove(tmp_filename)
+
+                # untar/extract any detected archive file(s)
+                if untar_files:
+                    import tarfile
+                    # not sure if we should check for '.tar' ending here (as well)?
+                    if tarfile.is_tarfile(decrypted_filename):
+                        untar_path = './'
+                        #if os.path.sep in decrypted_filename:
+                        #    untar_path = decrypted_filename[:decrypted_filename.rfind(os.path.sep)]
+                        if use_file_overwrite:
+                            with tarfile.open(decrypted_filename) as tar:
+                                tar.extractall(path=untar_path)
+                        else:
+                            with tarfile.TarFile(decrypted_filename, 'r', errorlevel=1) as tar:
+                                for tarinfo in tar:
+                                    t_file = tarinfo.name
+                                    if not os.path.exists(os.path.join(untar_path,t_file)):
+                                        try:
+                                            tar.extract(t_file)
+                                        except IOError as e:
+                                            stderr("TAR sub-file extraction failed [" + str(e) + "]")
+                                    else:
+                                        stderr('Failed to extract: ' + t_file + '. File already exist. Please enable --overwriting flag to replace existing files.')
+                        # remove the tar archive
+                        # TODO: should we check, if tar archive extraction was a success? Probably not, since we want to extract it next time again, especially, if something failed
+                        os.remove(decrypted_filename)
 
             # overwrite the entered passphrases after file decryption is complete for all files
             passphrase = ""
