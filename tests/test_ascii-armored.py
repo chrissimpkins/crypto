@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import sys
 import os
 import unittest
 import pexpect
-from Naked.toolshed.shell import execute
 from Naked.toolshed.system import file_exists, make_path
 
 class CryptoASCIIFileEncryptTest(unittest.TestCase):
