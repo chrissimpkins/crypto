@@ -86,7 +86,7 @@ def main():
                 if argument[0] == "-":
                     pass # if it is an option, do nothing
                 else:
-                    stderr("'" + argument + "' does not appear to be an existing file or directory.  Aborting decryption attempt for this request.", 0)
+                    stderr("'" + argument + "' does not appear to be an existing file or directory.  Aborting decryption attempt for this request.")
 
         # unroll the contained directory files into the file_list IF they are encrypted file types
         if len(directory_list) > 0:

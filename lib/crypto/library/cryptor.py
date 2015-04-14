@@ -5,10 +5,10 @@ import sys
 from Naked.toolshed.shell import muterun
 from Naked.toolshed.system import file_size, stdout, stderr
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Cryptor class
 #   performs gpg encryption of one or more files
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class Cryptor(object):
     """performs gpg encryption of one or more files"""
     def __init__(self, passphrase):
@@ -22,13 +22,13 @@ class Cryptor(object):
         self.common_binaries = set(['.7z', '.gz', '.aac', '.app', '.avi', '.azw', '.bz2', '.deb', '.doc', '.dmg', '.exe', '.flv', '.gif', '.jar', '.jpg', '.mov', '.mp3', '.mp4', '.odt', '.oga', '.ogg', '.ogm', '.pdf', '.pkg', '.png', '.ppt', '.pps', '.psd', '.rar', '.rpm', '.tar', '.tif', '.wav', '.wma', '.wmv', '.xls', '.zip', '.aiff', '.docx', '.epub', '.flac', '.mpeg', '.jpeg', '.pptx', '.xlsx'])
         self.common_text = set(['.c', '.h', '.m', '.cc', '.js', '.pl', '.py', '.rb', '.sh', '.cpp', '.css', '.csv', '.php', '.rss', '.txt', '.xml', '.yml', '.java', '.json', '.html', '.yaml'])
 
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
     # PUBLIC methods
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
 
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
     # encrypt_file : file encryption method
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
     def encrypt_file(self, inpath, force_nocompress=False, force_compress=False, armored=False, checksum=False):
         """public method for single file encryption with optional compression, ASCII armored formatting, and file hash digest generation"""
         if armored:
@@ -60,7 +60,7 @@ class Cryptor(object):
             # check returned status code
             if response.exitcode == 0:
                 stdout(encrypted_outpath + " was generated from " + inpath)
-                if checksum: # add a SHA256 hash digest of the encrypted file - requested by user --hash flag in command
+                if checksum:  # add a SHA256 hash digest of the encrypted file - requested by user --hash flag in command
                     from crypto.library import hash
                     encrypted_file_hash = hash.generate_hash(encrypted_outpath)
                     if len(encrypted_file_hash) == 64:
@@ -76,29 +76,28 @@ class Cryptor(object):
             stderr("There was a problem with the execution of gpg. Encryption failed")
             sys.exit(1)
 
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
     # encrypt_files : multiple file encryption
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
     def encrypt_files(self, file_list, force_nocompress=False, force_compress=False, armored=False, checksum=False):
         """public method for multiple file encryption with optional compression, ASCII armored formatting, and file hash digest generation"""
         for the_file in file_list:
             self.encrypt_file(the_file, force_nocompress, force_compress, armored, checksum)
 
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
     # cleanup : overwrite the passphrase in memory
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
     def cleanup(self):
         """public method that overwrites user passphrase in memory"""
         self.passphrase = ""
 
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
     # PRIVATE methods
-    #------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------
 
     def _create_outfilepath(self, inpath):
         """private method that generates the crypto saved file path string with a .crypt file type"""
         return inpath + '.crypt'
-
 
     def _is_compress_filetype(self, inpath):
         """private method that performs magic number and size check on file to determine whether to compress the file"""
@@ -114,18 +113,17 @@ class Cryptor(object):
                 if the_file_size > 512000:  # seems to be a break point at ~ 500kb where file compression offset by additional file read, so limit tests to files > 500kB
                     try:
                         response = muterun("file --mime-type -b " + inpath)
-                        if response.stdout[0:5] == "text/": # check for a text file mime type
-                            return True  # appropriate size, appropriate file mime type
+                        if response.stdout[0:5] == "text/":  # check for a text file mime type
+                            return True   # appropriate size, appropriate file mime type
                         else:
-                            return False # appropriate size, inappropriate file mime type
+                            return False  # appropriate size, inappropriate file mime type
                     except Exception:
                         return False
                 else:
                     return True  # if file size is < 500kB, skip the additional file read and just go with compression
             else:
-                return False # below minimum size to consider compression, do not compress
-        
-        
+                return False  # below minimum size to consider compression, do not compress
+
     def _is_common_binary(self, inpath):
         """compare file path mime type to common binary file types"""
         # make local variables for the available char numbers in the suffix types to be tested
@@ -142,8 +140,7 @@ class Cryptor(object):
             return True
         else:
             return False
-        
-        
+
     def _is_common_text(self, inpath):
         """compare file path mime type to common text file types"""
         # make local variables for the available char numbers in the suffix types to be tested
@@ -163,6 +160,3 @@ class Cryptor(object):
             return True
         else:
             return False
-        
-        
-
