@@ -17,7 +17,7 @@ class CryptoSingleDirectoryDecryptTest(unittest.TestCase):
         pass
 
 
-## SINGLE ARGUMENT TESTS
+# SINGLE ARGUMENT TESTS
     # does not decrypt a file if overwrite of existing file is going to occur
     # does not implicitly decrypt a file without a .crypt, .gpg, .asc, or .pgp suffix
     def test_decrypt_singledir_multiplefiles(self):
@@ -74,14 +74,14 @@ class CryptoSingleDirectoryDecryptTest(unittest.TestCase):
         self.assertEqual(child.exitstatus, 1)
 
     # missing directory test
-    def test_decrypt_singledir_diff_passphrase(self):
+    def test_decrypt_singledir_missing_dir(self):
         command = "decrypto fakedir"
         child = pexpect.spawn(command)
         child.expect("The path that you entered does not appear to be an existing file or directory.  Please try again.")
         child.close()
         self.assertEqual(child.exitstatus, 1)
 
-## MULTIPLE ARGUMENT TESTS
+# MULTIPLE ARGUMENT TESTS
 
     # test single directory with overwrite of existing .crypt and .gpg files using long option
     def test_decrypt_singledir_overwrite_longflag(self):

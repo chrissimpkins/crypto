@@ -4,7 +4,8 @@
 import unittest
 import shutil
 import os
-from Naked.toolshed.system import file_exists, dir_exists, stderr
+import pexpect
+from Naked.toolshed.system import file_exists, dir_exists, stderr, make_path
 from crypto.library.package import generate_tar_files, remove_tar_files
 
 
@@ -35,11 +36,14 @@ class CryptoTarArchiveTest(unittest.TestCase):
         # cleanup files from old tests if still around
         if file_exists(self.post_tardir_path):
             os.remove(self.post_tardir_path)
-            os.remove(self.post_tardir2_path)
-            if file_exists(self.post_tardir_path) or file_exists(self.post_tardir2_path):
-                stderr("unable to delete testfile in setup for CryptoTarArchiveTest in the test_tar-archive.py test module", exit=1)
 
-    # Tar archive file creation tests
+        if file_exists(self.post_tardir2_path):
+            os.remove(self.post_tardir2_path)
+
+        if file_exists(self.post_tardir_path) or file_exists(self.post_tardir2_path):
+            stderr("unable to delete testfile in setup for CryptoTarArchiveTest in the test_tar-archive.py test module", exit=1)
+
+    # Tar archive file creation unit tests
     
     def test_crypto_tar_creation(self):
         # execute generate_tar_file function with directory that contains a file
@@ -77,7 +81,22 @@ class CryptoTarArchiveTest(unittest.TestCase):
         self.assertFalse(file_exists(self.post_tardir_path))
         self.assertFalse(file_exists(self.post_tardir2_path))
         
-    # TODO: test creation of encrypted tar archives with the command line request
+    # Command line tests with the tar archive flag
+
+    def test_crypto_tar_commandline_tararchive(self):
+        command = "crypto --tar testdir9/tar_dir"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("\r\ntestdir9/tar_dir.tar.crypt was generated from testdir9/tar_dir.tar\r\n")
+        self.assertTrue(file_exists(make_path('testdir9', 'tar_dir.tar.crypt')))   # confirm that the encrypted tar file is there
+        self.assertFalse(file_exists(make_path('testdir9', 'tar_dir.tar')))        # confirm that the tar file is removed
+        self.assertTrue(dir_exists(make_path('testdir9', 'tar_dir')))              # confirm that the test directory is not removed
+        child.close()
+
+        os.remove('testdir9/tar_dir.tar.crypt')
 
     # Error tests
     
@@ -102,5 +121,3 @@ class CryptoTarArchiveTest(unittest.TestCase):
         self.assertTrue(file_exists(nontar_file))
         remove_tar_files([nontar_file])
         self.assertTrue(file_exists(nontar_file))  # should still be present after the function executed b/c not tar file
-        
-        
