@@ -64,7 +64,7 @@ class CryptoTarArchiveTest(unittest.TestCase):
         self.assertTrue(file_exists(self.post_tardir2_path))
         self.assertEqual([self.post_tardir_path, self.post_tardir2_path], tar_list)   # confirm list returned by the function
         
-        #cleanup
+        # cleanup
         os.remove(self.post_tardir_path)
         os.remove(self.post_tardir2_path)
         
@@ -78,8 +78,7 @@ class CryptoTarArchiveTest(unittest.TestCase):
         self.assertFalse(file_exists(self.post_tardir2_path))
         
     # TODO: test creation of encrypted tar archives with the command line request
-    
-    
+
     # Error tests
     
     def test_crypto_tar_fails_with_missingdir(self):
