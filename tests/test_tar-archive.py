@@ -120,6 +120,37 @@ class CryptoTarArchiveTest(unittest.TestCase):
         os.remove('testdir9/tar_dir.tar.crypt')
         os.remove('testdir9/tar_dir_two.tar.crypt')
 
+    def test_crypto_tar_commandline_multidir_and_file(self):
+        command = "crypto --tar testdir9/tar_dir testdir9/tar_dir_two testdir9/nontar.txt"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("\r\ntestdir9/nontar.txt.crypt was generated from testdir9/nontar.txt\r\n")
+        child.expect("testdir9/tar_dir.tar.crypt was generated from testdir9/tar_dir.tar\r\n")
+        child.expect("testdir9/tar_dir_two.tar.crypt was generated from testdir9/tar_dir_two.tar\r\n")
+
+        self.assertTrue(
+            file_exists(make_path('testdir9', 'tar_dir.tar.crypt')))  # confirm that the encrypted tar file is there
+        self.assertFalse(file_exists(make_path('testdir9', 'tar_dir.tar')))  # confirm that the tar file is removed
+        self.assertTrue(dir_exists(make_path('testdir9', 'tar_dir')))  # confirm that the test directory is not removed
+
+        self.assertTrue(
+            file_exists(make_path('testdir9', 'tar_dir_two.tar.crypt')))  # confirm that the encrypted tar file is there
+        self.assertFalse(file_exists(make_path('testdir9', 'tar_dir_two.tar')))  # confirm that the tar file is removed
+        self.assertTrue(
+            dir_exists(make_path('testdir9', 'tar_dir_two')))  # confirm that the test directory is not removed
+
+        self.assertTrue(file_exists(make_path('testdir9', 'nontar.txt.crypt')))
+        self.assertTrue(file_exists(make_path('testdir9', 'nontar.txt')))  # confirm that the file was not removed
+
+        child.close()
+
+        os.remove('testdir9/tar_dir.tar.crypt')
+        os.remove('testdir9/tar_dir_two.tar.crypt')
+        os.remove('testdir9/nontar.txt.crypt')
+
     # Error tests
     
     def test_crypto_tar_fails_with_missingdir(self):
