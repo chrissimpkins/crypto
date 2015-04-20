@@ -86,6 +86,7 @@ CRYPTO OPTIONS
 DECRYPTO OPTIONS
    --overwrite | -o      Overwrite an existing file with the decrypted file
    --stdout    | -s      Print file contents to the standard output stream
+   --untar               Automatically untar any decrypted tar archive(s)
 
 OTHER OPTIONS
    --help | -h           Display crypto and decrypto help
