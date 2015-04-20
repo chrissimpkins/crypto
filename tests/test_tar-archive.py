@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 import unittest
-import shutil
 import os
 import pexpect
 from Naked.toolshed.system import file_exists, dir_exists, stderr, make_path
@@ -97,6 +96,29 @@ class CryptoTarArchiveTest(unittest.TestCase):
         child.close()
 
         os.remove('testdir9/tar_dir.tar.crypt')
+
+    def test_crypto_tar_commandline_multidir_tararchive(self):
+        command = "crypto --tar testdir9/tar_dir testdir9/tar_dir_two"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("\r\ntestdir9/tar_dir.tar.crypt was generated from testdir9/tar_dir.tar\r\n")
+        child.expect("testdir9/tar_dir_two.tar.crypt was generated from testdir9/tar_dir_two.tar\r\n")
+
+        self.assertTrue(file_exists(make_path('testdir9', 'tar_dir.tar.crypt')))   # confirm that the encrypted tar file is there
+        self.assertFalse(file_exists(make_path('testdir9', 'tar_dir.tar')))        # confirm that the tar file is removed
+        self.assertTrue(dir_exists(make_path('testdir9', 'tar_dir')))              # confirm that the test directory is not removed
+
+        self.assertTrue(file_exists(make_path('testdir9', 'tar_dir_two.tar.crypt')))   # confirm that the encrypted tar file is there
+        self.assertFalse(file_exists(make_path('testdir9', 'tar_dir_two.tar')))        # confirm that the tar file is removed
+        self.assertTrue(dir_exists(make_path('testdir9', 'tar_dir_two')))              # confirm that the test directory is not removed
+
+        child.close()
+
+        os.remove('testdir9/tar_dir.tar.crypt')
+        os.remove('testdir9/tar_dir_two.tar.crypt')
 
     # Error tests
     
