@@ -13,6 +13,7 @@ def main():
     import sys
     from time import sleep
     import getpass
+    import tarfile
     from Naked.commandline import Command
     from Naked.toolshed.shell import execute, muterun
     from Naked.toolshed.system import dir_exists, file_exists, list_all_files, make_path, stdout, stderr
@@ -54,14 +55,17 @@ def main():
     #------------------------------------------------------------------------------------------
     elif c.argc > 1:
         # code for multi-file processing and commands that include options
-        use_standard_output = False # print to stdout flag
-        use_file_overwrite = False # overwrite existing files
+        use_standard_output = False  # print to stdout flag
+        use_file_overwrite = False  # overwrite existing file
+        untar_archives = True  # untar decrypted tar archives, true by default
 
         # set user option flags
         if c.option('--stdout') or c.option('-s'):
             use_standard_output = True
         if c.option('--overwrite') or c.option('-o'):
             use_file_overwrite = True
+        if c.option('--nountar'):
+            untar_archives = False
 
         directory_list = [] # directory paths included in the user entered paths from the command line
         file_list = [] # file paths included in the user entered paths from the command line (and inside directories entered)
@@ -102,7 +106,6 @@ def main():
                     elif contained_file.endswith('.pgp'):
                         file_list.append(make_path(directory, contained_file))
 
-
         # confirm that there are files for decryption, if not abort
         if len(file_list) == 0:
             stderr("Could not identify files for decryption")
@@ -142,9 +145,9 @@ def main():
 
                 # begin decryption
                 if not skip_file:
-                    if use_standard_output: # using --quiet flag to suppress stdout messages from gpg, just want the file data in stdout stream
+                    if use_standard_output:  # using --quiet flag to suppress stdout messages from gpg, just want the file data in stdout stream
                         system_command = "gpg --batch --quiet --passphrase '" + passphrase + "' -d " + encrypted_file
-                        successful_execution = execute(system_command) # use naked execute function to directly push to stdout, rather than return stdout
+                        successful_execution = execute(system_command)  # use naked execute function to directly push to stdout, rather than return stdout
 
                         if not successful_execution:
                             stderr("Unable to decrypt file '" + encrypted_file + "'", 0)
@@ -152,7 +155,7 @@ def main():
                                 tmp_filename = decrypted_filename + '.tmp'
                                 if file_exists(tmp_filename):
                                     os.rename(tmp_filename, decrypted_filename)
-                        else: # decryption successful but we are in stdout flag so do not include any other output from decrypto
+                        else:  # decryption successful but we are in stdout flag so do not include any other output from decrypto
                             pass
                     else:
                         system_command = "gpg --batch -o " + decrypted_filename + " --passphrase '" + passphrase + "' -d " + encrypted_file
@@ -160,8 +163,8 @@ def main():
 
                         if response.exitcode == 0:
                             stdout("'" + encrypted_file + "' decrypted to '" + decrypted_filename + "'")
-                        else: # failed decryption
-                            if created_tmp_files:# restore the moved tmp file to original if decrypt failed
+                        else:  # failed decryption
+                            if created_tmp_files:  # restore the moved tmp file to original if decrypt failed
                                 tmp_filename = decrypted_filename + '.tmp'
                                 if file_exists(tmp_filename):
                                     os.rename(tmp_filename, decrypted_filename)
@@ -174,6 +177,37 @@ def main():
                     tmp_filename = decrypted_filename + '.tmp'
                     if file_exists(tmp_filename):
                         os.remove(tmp_filename)
+
+                # untar/extract any detected archive file(s)
+                if untar_archives is True:
+                    if decrypted_filename.endswith('.tar') and tarfile.is_tarfile(decrypted_filename):
+                        untar_path_tuple = os.path.split(decrypted_filename)
+                        untar_file_tuple = os.path.splitext(untar_path_tuple[1])
+                        untar_path_maindir = os.path.splitext(untar_file_tuple[0])[0]
+                        untar_path = os.path.join(untar_path_tuple[0], untar_path_maindir)
+                        if use_file_overwrite:
+                            with tarfile.open(decrypted_filename) as tar:
+                                if len(untar_path) > 0:
+                                    tar.extractall(path=untar_path)  # use dir path from the decrypted_filename if not CWD
+                                else:
+                                    tar.extractall()  # else use CWD
+                        else:
+                            with tarfile.TarFile(decrypted_filename, 'r', errorlevel=1) as tar:
+                                for tarinfo in tar:
+                                    t_file = tarinfo.name
+                                    if len(untar_path) > 0:
+                                        t_file_path = os.path.join(untar_path, t_file)
+                                    else:
+                                        t_file_path = t_file
+                                    if not os.path.exists(t_file_path):
+                                        try:
+                                            tar.extract(t_file)
+                                        except IOError as e:
+                                            stderr("Tar archive file extraction failed for the file '" + t_file_path + "' [" + str(e) + "]")
+                                    else:
+                                        stderr("Failed to extract the file '" + t_file_path + "'. File already exists. Please use the --overwrite flag to replace existing files.")
+                        # remove the tar archive
+                        os.remove(decrypted_filename)   # remove the original decrypted file if it was a tar archive
 
             # overwrite the entered passphrases after file decryption is complete for all files
             passphrase = ""
@@ -189,19 +223,19 @@ def main():
             sys.exit(1)
 
     elif c.argc == 1:
-    # simple single file or directory processing with default settings
+        # simple single file or directory processing with default settings
         path = c.arg0
-        if file_exists(path): ## SINGLE FILE
+        if file_exists(path):  # SINGLE FILE
             check_existing_file = False # check for a file with the name of new decrypted filename in the directory
 
             if path.endswith('.crypt'):
-                new_filename = path[0:-6] # remove the .crypt suffix
+                new_filename = path[0:-6]  # remove the .crypt suffix
                 check_existing_file = True
             elif path.endswith('.gpg') or path.endswith('.pgp') or path.endswith('.asc'):
                 new_filename = path[0:-4]
                 check_existing_file = True
             else:
-                new_filename = path + ".decrypt" #if there is not a standard file type, then add a .decrypt suffix to the decrypted file name
+                new_filename = path + ".decrypt"  # if there is not a standard file type, then add a .decrypt suffix to the decrypted file name
                 stdout("Could not confirm that the requested file is encrypted based upon the file type.  Attempting decryption.  Keep your fingers crossed...")
 
             # confirm that the decrypted path does not already exist, if so abort with warning message to user
@@ -212,7 +246,7 @@ def main():
 
             # get passphrase used to symmetrically decrypt the file
             passphrase = getpass.getpass("Please enter your passphrase: ")
-            if len(passphrase) == 0: # confirm that user entered a passphrase
+            if len(passphrase) == 0:  # confirm that user entered a passphrase
                 stderr("You did not enter a passphrase. Please repeat your command and try again.")
                 sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
@@ -237,7 +271,7 @@ def main():
             else:
                 stderr("The passphrases did not match.  Please enter your command again.")
                 sys.exit(1)
-        elif dir_exists(path):  ## SINGLE DIRECTORY
+        elif dir_exists(path):  # SINGLE DIRECTORY
             dirty_directory_file_list = list_all_files(path)
             directory_file_list = [x for x in dirty_directory_file_list if (x.endswith('.crypt') or x.endswith('.gpg') or x.endswith('.pgp') or x.endswith('.asc'))]
 
@@ -246,7 +280,7 @@ def main():
                 stderr("There are no encrypted files in the directory")
                 sys.exit(1)
 
-            #prompt for the passphrase
+            # prompt for the passphrase
             passphrase = getpass.getpass("Please enter your passphrase: ")
             if len(passphrase) == 0: # confirm that user entered a passphrase
                 stderr("You did not enter a passphrase. Please repeat your command and try again.")
@@ -293,10 +327,10 @@ def main():
             stderr("The path that you entered does not appear to be an existing file or directory.  Please try again.")
             sys.exit(1)
 
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
     #  Message to provide to the user when all above conditional logic fails to meet a true condition
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     else:
         print("Could not complete your request.  Please try again.")
         sys.exit(1)
