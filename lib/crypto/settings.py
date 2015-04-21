@@ -84,9 +84,9 @@ CRYPTO OPTIONS
    --tar                 Create tar archives of directories before encryption
 
 DECRYPTO OPTIONS
+   --nountar             Do not automatically unpack decrypted tar archives
    --overwrite | -o      Overwrite an existing file with the decrypted file
    --stdout    | -s      Print file contents to the standard output stream
-   --untar               Automatically untar any decrypted tar archive(s)
 
 OTHER OPTIONS
    --help | -h           Display crypto and decrypto help
