@@ -16,7 +16,7 @@ def main():
     import tarfile
     from Naked.commandline import Command
     from Naked.toolshed.shell import execute, muterun
-    from Naked.toolshed.system import dir_exists, file_exists, list_all_files, make_path, stdout, stderr
+    from Naked.toolshed.system import dir_exists, file_exists, list_all_files, make_path, stdout, stderr, is_dir
 
     #------------------------------------------------------------------------------------------
     # [ Instantiate command line object ]
@@ -182,9 +182,7 @@ def main():
                 if untar_archives is True:
                     if decrypted_filename.endswith('.tar') and tarfile.is_tarfile(decrypted_filename):
                         untar_path_tuple = os.path.split(decrypted_filename)
-                        untar_file_tuple = os.path.splitext(untar_path_tuple[1])
-                        untar_path_maindir = os.path.splitext(untar_file_tuple[0])[0]
-                        untar_path = os.path.join(untar_path_tuple[0], untar_path_maindir)
+                        untar_path = untar_path_tuple[0]
                         if use_file_overwrite:
                             with tarfile.open(decrypted_filename) as tar:
                                 if len(untar_path) > 0:
@@ -201,13 +199,23 @@ def main():
                                         t_file_path = t_file
                                     if not os.path.exists(t_file_path):
                                         try:
-                                            tar.extract(t_file)
+                                            if len(untar_path) > 0:
+                                                tar.extract(t_file, path=untar_path)  # write to the appropriate dir
+                                            else:
+                                                tar.extract(t_file)  # write to CWD
                                         except IOError as e:
-                                            stderr("Tar archive file extraction failed for the file '" + t_file_path + "' [" + str(e) + "]")
-                                    else:
-                                        stderr("Failed to extract the file '" + t_file_path + "'. File already exists. Please use the --overwrite flag to replace existing files.")
-                        # remove the tar archive
-                        os.remove(decrypted_filename)   # remove the original decrypted file if it was a tar archive
+                                            stderr(
+                                                "Tar archive file extraction failed for the file '" + t_file_path + "' [" + str(
+                                                    e) + "]")
+                                    elif is_dir(t_file_path):
+                                        pass  # do nothing if it exists and is a directory, no need to warn
+                                    else:  # it is a file and it already exists, provide user error message
+                                        stderr(
+                                            "Failed to extract the file '" + t_file_path + "'. File already exists. Please use the --overwrite flag to replace existing files.",
+                                            exit=1)
+
+                        # remove the decrypted tar archive file
+                        os.remove(decrypted_filename)
 
             # overwrite the entered passphrases after file decryption is complete for all files
             passphrase = ""
@@ -226,22 +234,22 @@ def main():
         # simple single file or directory processing with default settings
         path = c.arg0
         if file_exists(path):  # SINGLE FILE
-            check_existing_file = False # check for a file with the name of new decrypted filename in the directory
+            check_existing_file = False  # check for a file with the name of new decrypted filename in the directory
 
             if path.endswith('.crypt'):
-                new_filename = path[0:-6]  # remove the .crypt suffix
+                decrypted_filename = path[0:-6]  # remove the .crypt suffix
                 check_existing_file = True
             elif path.endswith('.gpg') or path.endswith('.pgp') or path.endswith('.asc'):
-                new_filename = path[0:-4]
+                decrypted_filename = path[0:-4]
                 check_existing_file = True
             else:
-                new_filename = path + ".decrypt"  # if there is not a standard file type, then add a .decrypt suffix to the decrypted file name
+                decrypted_filename = path + ".decrypt"  # if there is not a standard file type, then add a .decrypt suffix to the decrypted file name
                 stdout("Could not confirm that the requested file is encrypted based upon the file type.  Attempting decryption.  Keep your fingers crossed...")
 
             # confirm that the decrypted path does not already exist, if so abort with warning message to user
             if check_existing_file is True:
-                if file_exists(new_filename):
-                    stderr("Your file will be decrypted to '" + new_filename + "' and this file path already exists.  Please move the file or use the --overwrite option with your command if you intend to replace the current file.")
+                if file_exists(decrypted_filename):
+                    stderr("Your file will be decrypted to '" + decrypted_filename + "' and this file path already exists.  Please move the file or use the --overwrite option with your command if you intend to replace the current file.")
                     sys.exit(1)
 
             # get passphrase used to symmetrically decrypt the file
@@ -253,18 +261,49 @@ def main():
 
             # confirm that the passphrases match
             if passphrase == passphrase_confirm:
-                system_command = "gpg --batch -o " + new_filename + " --passphrase '" + passphrase + "' -d " + path
+                system_command = "gpg --batch -o " + decrypted_filename + " --passphrase '" + passphrase + "' -d " + path
                 response = muterun(system_command)
-                # overwrite user entered passphrases
-                passphrase = ""
-                passphrase_confirm = ""
 
                 if response.exitcode == 0:
+                    # unpack tar archive generated from the decryption, if present
+                    if decrypted_filename.endswith('.tar') and tarfile.is_tarfile(decrypted_filename):
+                        untar_path_tuple = os.path.split(decrypted_filename)
+                        untar_path = untar_path_tuple[0]
+
+                        with tarfile.TarFile(decrypted_filename, 'r', errorlevel=1) as tar:
+                            for tarinfo in tar:
+                                t_file = tarinfo.name
+                                if len(untar_path) > 0:
+                                    t_file_path = os.path.join(untar_path, t_file)
+                                else:
+                                    t_file_path = t_file
+                                if not os.path.exists(t_file_path):
+                                    try:
+                                        if len(untar_path) > 0:
+                                            tar.extract(t_file, path=untar_path)  # write to the appropriate dir
+                                        else:
+                                            tar.extract(t_file)  # write to CWD
+                                    except IOError as e:
+                                        stderr("Tar archive file extraction failed for the file '" + t_file_path + "' [" + str(e) + "]")
+                                elif is_dir(t_file_path):
+                                    pass   # do nothing if it exists and is a directory, no need to warn
+                                else:  # it is a file and it already exists, provide user error message
+                                    stderr("Failed to extract the file '" + t_file_path + "'. File already exists. Please use the --overwrite flag to replace existing files.", exit=1)
+
+                        # remove the decrypted tar archive
+                        os.remove(decrypted_filename)
+
                     stdout("Decryption complete")
+                    # overwrite user entered passphrases
+                    passphrase = ""
+                    passphrase_confirm = ""
                     sys.exit(0)
                 else:
                     stderr(response.stderr)
                     stderr("Decryption failed")
+                    # overwrite user entered passphrases
+                    passphrase = ""
+                    passphrase_confirm = ""
                     # add a short pause to hinder brute force pexpect style password attacks with decrypto
                     sleep(0.2)  # 200ms pause
                     sys.exit(1)
