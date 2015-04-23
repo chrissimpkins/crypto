@@ -263,7 +263,75 @@ class CryptoUntarArchiveTest(unittest.TestCase):
         shutil.rmtree('testdir10/subdirs')
         os.remove(os.path.join('testdir10', 'subdirs.tar.crypt'))
 
+    def test_crypto_untar_multitar_archives_cwd(self):
+        shutil.copyfile(self.subdirs_encrypted_archive_sourcepath, self.subdirs_encrypted_archive_destpath)
+        shutil.copyfile(self.singlefile_encrypted_archive_sourcepath, self.singlefile_encrypted_archive_destpath)
+        # execute with testdir not working directory
+        try:
+            os.chdir(self.testdir)
+            command = "decrypto subdirs.tar.crypt singlefile.tar.crypt"
+            child = self.submit_same_passphrase(command)
+            # directory writes occur in the proper spot
+            self.assertTrue(dir_exists('subdirs'))
+            self.assertTrue(dir_exists('singlefile'))
+            # unpacked decrypted singlefile directory contains single file
+            self.assertTrue(file_exists(os.path.join('singlefile', 'test.txt')))
+            # the tar archive is deleted, encrypted file is not
+            self.assertFalse(file_exists('singlefile.tar'))
+            self.assertTrue(file_exists('singlefile.tar.crypt'))
+            # unpacked decrypted subdirs directory contains unpacked subdirectories
+            self.assertTrue(dir_exists(os.path.join('subdirs', 'dir1')))
+            self.assertTrue(dir_exists(os.path.join('subdirs', 'dir2')))
+            # unpacked decrypted subdirs directory contains the correct path for unpacked file in subdirectory
+            self.assertTrue(file_exists(os.path.join('subdirs', 'dir1', 'test.txt')))
+            # the tar archive is deleted, encrypted file is not
+            self.assertFalse(file_exists('subdirs.tar'))
+            self.assertTrue(file_exists('subdirs.tar.crypt'))
+            child.close()
 
-# TODO: multiple tar file decrypt and unpack tests
+            # cleanup
+            shutil.rmtree('subdirs')
+            shutil.rmtree('singlefile')
+            os.remove('subdirs.tar.crypt')
+            os.remove('singlefile.tar.crypt')
+            os.chdir(self.cwd)
+        except Exception as e:
+            os.chdir(self.cwd)
+            raise e
 
-# TODO: overwrite existing files tests
+    def test_crypto_untar_multitar_archives_notcwd(self):
+        shutil.copyfile(self.subdirs_encrypted_archive_sourcepath, self.subdirs_encrypted_archive_destpath)
+        shutil.copyfile(self.singlefile_encrypted_archive_sourcepath, self.singlefile_encrypted_archive_destpath)
+        # execute with testdir not working directory
+        command = "decrypto testdir10/subdirs.tar.crypt testdir10/singlefile.tar.crypt"
+        child = self.submit_same_passphrase(command)
+        # directory writes occur in the proper spot
+        self.assertTrue(dir_exists('testdir10/subdirs'))     # write occurs in testdir10
+        self.assertTrue(dir_exists('testdir10/singlefile'))
+        self.assertFalse(dir_exists('subdirs'))              # not in cwd
+        self.assertFalse(dir_exists('singlefile'))
+        # unpacked decrypted singlefile directory contains single file
+        self.assertTrue(file_exists(os.path.join('testdir10', 'singlefile', 'test.txt')))
+        # the tar archive is deleted, encrypted file is not
+        self.assertFalse(file_exists('testdir10/singlefile.tar'))
+        self.assertTrue(file_exists('testdir10/singlefile.tar.crypt'))
+        # unpacked decrypted subdirs directory contains unpacked subdirectories
+        self.assertTrue(dir_exists(os.path.join('testdir10', 'subdirs', 'dir1')))
+        self.assertTrue(dir_exists(os.path.join('testdir10', 'subdirs', 'dir2')))
+        # unpacked decrypted subdirs directory contains the correct path for unpacked file in subdirectory
+        self.assertTrue(file_exists(os.path.join('testdir10', 'subdirs', 'dir1', 'test.txt')))
+        # the tar archive is deleted, encrypted file is not
+        self.assertFalse(file_exists('testdir10/subdirs.tar'))
+        self.assertTrue(file_exists('testdir10/subdirs.tar.crypt'))
+        child.close()
+
+        # cleanup
+        shutil.rmtree('testdir10/subdirs')
+        shutil.rmtree('testdir10/singlefile')
+        os.remove('testdir10/subdirs.tar.crypt')
+        os.remove('testdir10/singlefile.tar.crypt')
+
+
+# TODO: overwrite existing files tests with --overwrite switch
+
+# TODO: do not untar if user has --nountar switch

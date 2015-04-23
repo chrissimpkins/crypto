@@ -224,7 +224,7 @@ def main():
             # add a short pause to hinder brute force pexpect style password attacks with decrypto
             sleep(0.2)  # 200ms pause
 
-        else: # passphrases did not match
+        else:  # passphrases did not match
             passphrase = ""
             passphrase_confirm = ""
             stderr("The passphrases did not match.  Please enter your command again.")
