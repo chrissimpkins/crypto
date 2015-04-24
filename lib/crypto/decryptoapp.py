@@ -128,7 +128,7 @@ def main():
                 elif encrypted_file.endswith('.gpg') or encrypted_file.endswith('.asc') or encrypted_file.endswith('.pgp'):
                     decrypted_filename = encrypted_file[0:-4]
                 else:
-                    decrypted_filename = encrypted_file + '.decrypt' # if it was a file without a known encrypted file type, add the .decrypt suffix
+                    decrypted_filename = encrypted_file + '.decrypt'  # if it was a file without a known encrypted file type, add the .decrypt suffix
 
                 # determine whether file overwrite will take place with the decrypted file
                 skip_file = False # flag that indicates this file should not be encrypted
@@ -187,8 +187,10 @@ def main():
                             with tarfile.open(decrypted_filename) as tar:
                                 if len(untar_path) > 0:
                                     tar.extractall(path=untar_path)  # use dir path from the decrypted_filename if not CWD
+                                    stdout("'" + decrypted_filename + "' unpacked in the directory path '" + untar_path + "'")
                                 else:
                                     tar.extractall()  # else use CWD
+                                    stdout("'" + decrypted_filename + "' unpacked in the current working directory")
                         else:
                             with tarfile.TarFile(decrypted_filename, 'r', errorlevel=1) as tar:
                                 for tarinfo in tar:
@@ -205,14 +207,13 @@ def main():
                                                 tar.extract(t_file)  # write to CWD
                                         except IOError as e:
                                             stderr(
-                                                "Tar archive file extraction failed for the file '" + t_file_path + "' [" + str(
+                                                "Tar archive file unpack failed for the file '" + t_file_path + "' [" + str(
                                                     e) + "]")
                                     elif is_dir(t_file_path):
                                         pass  # do nothing if it exists and is a directory, no need to warn
                                     else:  # it is a file and it already exists, provide user error message
                                         stderr(
-                                            "Failed to extract the file '" + t_file_path + "'. File already exists. Please use the --overwrite flag to replace existing files.",
-                                            exit=1)
+                                            "Failed to unpack the file '" + t_file_path + "'. File already exists. Use the --overwrite flag to replace existing files.")
 
                         # remove the decrypted tar archive file
                         os.remove(decrypted_filename)
@@ -284,11 +285,11 @@ def main():
                                         else:
                                             tar.extract(t_file)  # write to CWD
                                     except IOError as e:
-                                        stderr("Tar archive file extraction failed for the file '" + t_file_path + "' [" + str(e) + "]")
+                                        stderr("Tar archive file unpack failed for the file '" + t_file_path + "' [" + str(e) + "]")
                                 elif is_dir(t_file_path):
                                     pass   # do nothing if it exists and is a directory, no need to warn
                                 else:  # it is a file and it already exists, provide user error message
-                                    stderr("Failed to extract the file '" + t_file_path + "'. File already exists. Please use the --overwrite flag to replace existing files.", exit=1)
+                                    stderr("Failed to unpack the file '" + t_file_path + "'. File already exists. Use the --overwrite flag to replace existing files.")
 
                         # remove the decrypted tar archive
                         os.remove(decrypted_filename)
