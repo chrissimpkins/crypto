@@ -10,8 +10,8 @@ app_name = 'crypto'
 # Version Number
 #------------------------------------------------------------------------------
 major_version = "1"
-minor_version = "3"
-patch_version = "4"
+minor_version = "4"
+patch_version = "0"
 
 #------------------------------------------------------------------------------
 # Debug Flag (switch to False for production release code)
@@ -81,7 +81,7 @@ CRYPTO OPTIONS
    --hash                Generate SHA256 hash digest of encrypted file(s)
    --space               Favor reduced file size over encryption speed
    --speed               Favor encryption speed over reduced file size
-   --tar                 Create tar archives of directories before encryption
+   --tar                 Create tar archive of directory of files before encryption
 
 DECRYPTO OPTIONS
    --nountar             Do not automatically unpack decrypted tar archives
@@ -98,7 +98,7 @@ Use one or more explicit file path arguments to encrypt or decrypt the file(s). 
 
 Use one or more directory arguments with the crypto executable to encrypt all files in the top level of each directory with the same passphrase. Previously encrypted files with a '.crypt' file type will not be generated again in a directory.  Remove them before you run the command if you intend to repeat encryption with a file.
 
-Use one or more directory arguments with decrypto to decrypt all .crypt, .gpg, .asc, and .pgp files in the top level of each directory.
+Use one or more directory arguments with decrypto to decrypt all .crypt, .gpg, .asc, and .pgp files in the top level of each directory.  decrypto automatically unpacks decrypted tar archives.
 
 Encryption is performed with the AES256 cipher algorithm.  Decryption will take place with any cipher algorithm that your version of gpg supports.
 """
