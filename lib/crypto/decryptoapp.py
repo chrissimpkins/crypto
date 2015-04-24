@@ -207,7 +207,7 @@ def main():
                                                 tar.extract(t_file)  # write to CWD
                                         except IOError as e:
                                             stderr(
-                                                "Tar archive file unpack failed for the file '" + t_file_path + "' [" + str(
+                                                "Failed to unpack the file '" + t_file_path + "' [" + str(
                                                     e) + "]")
                                     elif is_dir(t_file_path):
                                         pass  # do nothing if it exists and is a directory, no need to warn
@@ -285,7 +285,7 @@ def main():
                                         else:
                                             tar.extract(t_file)  # write to CWD
                                     except IOError as e:
-                                        stderr("Tar archive file unpack failed for the file '" + t_file_path + "' [" + str(e) + "]")
+                                        stderr("Failed to unpack the file '" + t_file_path + "' [" + str(e) + "]")
                                 elif is_dir(t_file_path):
                                     pass   # do nothing if it exists and is a directory, no need to warn
                                 else:  # it is a file and it already exists, provide user error message
