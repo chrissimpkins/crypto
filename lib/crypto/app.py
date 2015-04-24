@@ -213,7 +213,7 @@ def main():
             # it is a directory, encrypt all top level files with default settings
             dirty_directory_file_list = list_all_files(path)
             # remove dot files and previously encrypted files (with .crypt suffix) from the list of directory files
-            clean_directory_file_list = [x for x in dirty_directory_file_list if x[0] != "." and x.endswith(".crypt") == False]  # remove dotfiles and .crypt files
+            clean_directory_file_list = [x for x in dirty_directory_file_list if x[0] != "." and x.endswith(".crypt") is False]  # remove dotfiles and .crypt files
 
             # confirm that there are still files in the list after the dot files and encrypted files are removed
             if len(clean_directory_file_list) == 0:
