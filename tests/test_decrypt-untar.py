@@ -331,7 +331,19 @@ class CryptoUntarArchiveTest(unittest.TestCase):
         os.remove('testdir10/subdirs.tar.crypt')
         os.remove('testdir10/singlefile.tar.crypt')
 
+    def test_crypto_untar_no_untar_when_nountar_switch(self):
+        shutil.copyfile(self.singlefile_encrypted_archive_sourcepath, self.singlefile_encrypted_archive_destpath)
+        # execute with testdir not working directory
+        command = "decrypto --nountar testdir10/singlefile.tar.crypt"
+        child = self.submit_same_passphrase(command)
+        # confirm that the tar archive is not unpacked
+        self.assertTrue(file_exists(os.path.join('testdir10', 'singlefile.tar')))
+        self.assertFalse(dir_exists(os.path.join('testdir10', 'singlefile')))
+
+        # cleanup
+        os.remove(os.path.join('testdir10', 'singlefile.tar'))
+        os.remove(os.path.join('testdir10', 'singlefile.tar.crypt'))
+
 
 # TODO: overwrite existing files tests with --overwrite switch
 
-# TODO: do not untar if user has --nountar switch
