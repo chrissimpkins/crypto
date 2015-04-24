@@ -5,9 +5,9 @@ Description
 
 crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encryption and decryption for one or more files on Unix and Linux platforms.  It runs on top of gpg and requires a gpg install on your system.  Encryption is performed with the AES256 cipher algorithm. `Benchmarks relative to default gpg settings are available for text and binary file mime types <https://chrissimpkins.github.io/crypto/benchmarks.html>`_.
 
-crypto provides a number of options including portable ASCII armored encryption formatting and SHA256 hash digest generation for your encrypted files.  You can view all available options in the `usage documentation <http://chrissimpkins.github.io/crypto/usage.html>`_ or with the ``--help`` option.
+crypto provides a number of options including automated tar archives of multiple files prior to encryption, portable ASCII armored encryption formatting, and SHA256 hash digest generation for your encrypted files.  You can view all available options in the `usage documentation <http://chrissimpkins.github.io/crypto/usage.html>`_ or with the ``--help`` option.
 
-Tested in cPython 2.7.x, 3.4.x, and pypy 2.4.x (Python version 2.7.8)
+Tested in cPython 2.7.x, 3.4.x, and pypy 2.4.x (Python version 2.7.9)
 
 
 Install

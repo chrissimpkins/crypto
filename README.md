@@ -7,6 +7,8 @@ crypto provides a simple interface to symmetric Gnu Privacy Guard (gpg) encrypti
 
 Encryption benchmarks vs. default gpg encryption are available [here](http://chrissimpkins.github.io/crypto/benchmarks.html) with additional details for [text](http://chrissimpkins.github.io/crypto/text-benchmarks.html), [pdf](http://chrissimpkins.github.io/crypto/pdf-benchmarks.html), [mp3](http://chrissimpkins.github.io/crypto/mp3-benchmarks.html), and [png](http://chrissimpkins.github.io/crypto/png-benchmarks.html) mime types.
 
+crypto provides a number of options including automated tar archives of multiple files prior to encryption, portable ASCII armored encryption formatting, and SHA256 hash digest generation for your encrypted files.
+
 ## Documentation
 
 Detailed documentation is available [here](http://chrissimpkins.github.io/crypto/index.html).
@@ -41,6 +43,11 @@ $ crypto --hash sometext.txt
 #### Encrypt All Top Level Files in Multiple Directories with Same Passphrase
 ```
 $ crypto imagedir privatedir
+```
+
+#### Pack Multiple Files in a Tar Archive, Then Encrypt the Archive
+```
+$ crypto --tar privatedir
 ```
 
 #### Decrypt a File
@@ -138,6 +145,11 @@ View the crypto version number
 ## Issues
 
 Please submit a [new issue report on the GitHub repository](https://github.com/chrissimpkins/crypto/issueshttps://github.com/chrissimpkins/crypto/issues) with a detailed overview of the problem that you are having.
+
+
+## Project Contributors
+
+- Christoph Russ (@christophruss)
 
 ---
 [MIT License](https://github.com/chrissimpkins/crypto/blob/master/docs/LICENSE) | Built with the [Naked Framework](https://pypi.python.org/pypi/Naked)
