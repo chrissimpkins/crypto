@@ -339,11 +339,56 @@ class CryptoUntarArchiveTest(unittest.TestCase):
         # confirm that the tar archive is not unpacked
         self.assertTrue(file_exists(os.path.join('testdir10', 'singlefile.tar')))
         self.assertFalse(dir_exists(os.path.join('testdir10', 'singlefile')))
+        child.close()
 
         # cleanup
         os.remove(os.path.join('testdir10', 'singlefile.tar'))
         os.remove(os.path.join('testdir10', 'singlefile.tar.crypt'))
 
+    def test_crypto_untar_overwrite_switch_performs_overwrite(self):
+        shutil.copyfile(self.singlefile_encrypted_archive_sourcepath, self.singlefile_encrypted_archive_destpath)
+        # execute first time to generate a decrypted, unpacked archive
+        command = "decrypto testdir10/singlefile.tar.crypt"
+        child = self.submit_same_passphrase(command)
+        # confirm that the archive was unpacked
+        self.assertTrue(dir_exists(os.path.join('testdir10', 'singlefile')))
+        self.assertTrue(file_exists(os.path.join('testdir10', 'singlefile', 'test.txt')))
+        child.close()
+        # execute the command again and overwrite existing files, assert that does not raise error
+        command = "decrypto --overwrite testdir10/singlefile.tar.crypt"
+        child = self.submit_same_passphrase(command)
+        # confirm that the directory and file are there
+        self.assertTrue(dir_exists(os.path.join('testdir10', 'singlefile')))
+        self.assertTrue(file_exists(os.path.join('testdir10', 'singlefile', 'test.txt')))
+        child.close()
 
-# TODO: overwrite existing files tests with --overwrite switch
+        # cleanup
+        shutil.rmtree(os.path.join('testdir10', 'singlefile'))
+        os.remove(os.path.join('testdir10', 'singlefile.tar.crypt'))
+
+    def test_crypto_untar_overwrite_fails_without_overwrite_switch(self):
+        shutil.copyfile(self.singlefile_encrypted_archive_sourcepath, self.singlefile_encrypted_archive_destpath)
+        # execute first time to generate a decrypted, unpacked archive
+        command = "decrypto testdir10/singlefile.tar.crypt"
+        child = self.submit_same_passphrase(command)
+        # confirm that the archive was unpacked
+        self.assertTrue(dir_exists(os.path.join('testdir10', 'singlefile')))
+        self.assertTrue(file_exists(os.path.join('testdir10', 'singlefile', 'test.txt')))
+        child.close()
+        # execute the command again and confirm that it raises error message, no file overwrite
+        command = "decrypto testdir10/singlefile.tar.crypt"
+        child = pexpect.spawn(command)
+        child.expect("Please enter your passphrase: ")
+        child.sendline("test")
+        child.expect("Please enter your passphrase again: ")
+        child.sendline("test")
+        child.expect("Failed to unpack the file 'testdir10/singlefile/test.txt'. File already exists. Use the --overwrite flag to replace existing files.")
+        child.close()
+
+        # cleanup
+        shutil.rmtree(os.path.join('testdir10', 'singlefile'))
+        os.remove(os.path.join('testdir10', 'singlefile.tar.crypt'))
+
+
+
 
