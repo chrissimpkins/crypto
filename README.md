@@ -149,7 +149,7 @@ Please submit a [new issue report on the GitHub repository](https://github.com/c
 
 ## Project Contributors
 
-- Christoph Russ (@christophruss)
+- [Christoph Russ](https://github.com/christophruss) (@christophruss)
 
 ---
 [MIT License](https://github.com/chrissimpkins/crypto/blob/master/docs/LICENSE) | Built with the [Naked Framework](https://pypi.python.org/pypi/Naked)
