@@ -117,7 +117,15 @@ Favor reduced file size over encryption speed
 
 Favor encryption speed over reduced file size
 
+#### `--tar`
+
+Create tar archives from directories of files, then encrypt
+
 ### decrypto Options
+
+#### `--nountar`
+
+Do not automatically unpack tar archives after decryption
 
 #### `--overwrite | -o`
 
