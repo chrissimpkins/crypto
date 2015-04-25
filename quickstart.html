@@ -90,6 +90,9 @@
 <h5>Encrypt Top Level Files in a Directory and Report SHA256 Hash Digests</h5>
 <pre><code>$ crypto --hash privatedir</code></pre>
 
+<h5>Pack an Entire Directory of Files into a Tar Archive, Then Encrypt Archive</h5>
+<pre><code>$ crypto --tar privatedir</code></pre>
+
 
 <br>
 <br>
@@ -126,6 +129,22 @@
 
 <h5>Decrypt Files in Multiple Directories</h5>
 <pre><code>$ decrypto imagedir privatedir</code></pre>
+
+<h4><i class="fa fa-square"></i> By Tar Archive</h4>
+<p>By default, decrypto decrypts tar archives and unpacks them in the same directory where the encrypted archive is located.  The decrypted tar archives are erased, leaving the decrypted, unpacked directories.  You can modify this default behavior with the <code>--nountar</code> switch.</p>
+
+<h5>Decrypt Tar Archive and Then Unpack It</h5>
+<pre><code>$ decrypto privatearchive.tar.crypt</code></pre>
+
+<h5>Decrypt Multiple Tar Archives and Unpack Them</h5>
+<pre><code>$ decrypto archiveone.tar.crypt archivetwo.tar.crypt</code></pre>
+
+<h5>Decrypt Tar Archive, Do Not Unpack It</h5>
+<pre><code>$ decrypto --nountar privatearchive.tar.crypt</code></pre>
+
+<h5>Decrypt Multiple Tar Archives, Do Not Unpack Them</h5>
+<pre><code>$ decrypto --nountar archiveone.tar.crypt archivetwo.tar.crypt</code></pre>
+
 
 
 

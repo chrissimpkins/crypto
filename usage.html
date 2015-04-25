@@ -67,12 +67,14 @@
 <TR> <TD><code>--hash</code></TD>   <TD>generate SHA256 hash digest for encrypted file(s)</TD> </TR>
 <tr><td><code>--space</code></td> <td>favor reduced file size over encryption speed</td></tr>
 <tr><td><code>--speed</code></td> <td>favor encryption speed over reduced file size</td></tr>
+<tr><td><code>--tar</code></td> <td>pack directory of files to tar archive, then encrypt</td></tr>
 </TABLE>
 
 <h4>decrypto Options</h4>
 <TABLE>
-<TR> <TD><code>--overwrite|-o</code></TD>   <TD>overwrite an existing file with a decrypted file</TD> </TR>
-<TR> <TD><code>--stdout | -s</code></TD>     <TD>print decrypted text to the standard output stream</TD> </TR>
+<TR> <TD><code>--nountar</code></TD> <TD>do not unpack decrypted tar archives</TD> </TR>
+<TR> <TD><code>--overwrite|-o</code></TD> <TD>overwrite an existing file with a decrypted file</TD> </TR>
+<TR> <TD><code>--stdout | -s</code></TD> <TD>print decrypted text to the standard output stream</TD> </TR>
 </TABLE>
 
 <h4>Utility Options</h4>

@@ -54,7 +54,7 @@
 <h5>Encrypt All Top Level Files in Multiple Directories with the Same Passphrase</h5>
 <pre><code>$ crypto directory1 directory2</code></pre>
 
-<p>Your passphrase is used to encrypt every file with a single prompt.</p>
+<p>Your passphrase is used to encrypt every file with a single prompt by default.  The <code>--tar</code> option is available (as of v1.4.0) to automatically create tar archives from entire directories of files prior to encryption.</p>
 
 <p>Decryption of each encrypted file that was generated above is just as simple:</p>
 
@@ -66,7 +66,7 @@
 
 <p>Encryption is performed with the <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard#Description_of_the_cipher">AES256 cipher algorithm</a>.  Decryption is supported for IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH, CAMELLIA128, CAMELLIA192, and CAMELLIA256 encrypted files.</p>
 
-<p>Multiple command line options are available, including the ability to generate a portable ASCII encoded encryption format and generate a SHA256 hash digest for your encrypted files.  Details are available in the <a href="usage.html">usage section</a> of the documentation.</p>
+<p>Multiple command line options are available, including the ability to create tar archives from entire directories of files prior to encryption, generate a portable ASCII encoded encryption format, and generate SHA256 hash digests for your encrypted files.  Details are available in the <a href="usage.html">usage section</a> of the documentation.</p>
 
 <h3><a id="is-it-right-for-you" class="anchor" href="#is-it-right-for-you" aria-hidden="true"><span class="octicon octicon-link"></span></a>Is crypto for you?</h3>
 
