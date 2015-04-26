@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # decrypto
 # Copyright 2015 Christopher Simpkins
 # MIT license
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Application start
 def main():
@@ -18,24 +18,24 @@ def main():
     from Naked.toolshed.shell import execute, muterun
     from Naked.toolshed.system import dir_exists, file_exists, list_all_files, make_path, stdout, stderr, is_dir
 
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     # [ Instantiate command line object ]
     #   used for all subsequent conditional logic in the CLI application
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     c = Command(sys.argv[0], sys.argv[1:])
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     # [ VALIDATION LOGIC ] - early validation of appropriate command syntax
     # Test that user entered at least one argument to the executable, print usage if not
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     if not c.command_suite_validates():
         from crypto.settings import usage as crypto_usage
         print(crypto_usage)
         sys.exit(1)
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     # [ HELP, VERSION, USAGE LOGIC ]
     # Naked framework provides default help, usage, and version commands for all applications
     #   --> settings for user messages are assigned in the lib/crypto/settings.py file
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     if c.help():      # User requested crypto help information
         from crypto.settings import help as crypto_help
         print(crypto_help)
@@ -44,15 +44,15 @@ def main():
         from crypto.settings import usage as crypto_usage
         print(crypto_usage)
         sys.exit(0)
-    elif c.version(): # User requested crypto version information
+    elif c.version():  # User requested crypto version information
         from crypto.settings import app_name, major_version, minor_version, patch_version
         version_display_string = app_name + ' ' + major_version + '.' + minor_version + '.' + patch_version
         print(version_display_string)
         sys.exit(0)
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     # [ APPLICATION LOGIC ]
     #
-    #------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------
     elif c.argc > 1:
         # code for multi-file processing and commands that include options
         use_standard_output = False  # print to stdout flag
@@ -67,13 +67,13 @@ def main():
         if c.option('--nountar'):
             untar_archives = False
 
-        directory_list = [] # directory paths included in the user entered paths from the command line
-        file_list = [] # file paths included in the user entered paths from the command line (and inside directories entered)
+        directory_list = []  # directory paths included in the user entered paths from the command line
+        file_list = []  # file paths included in the user entered paths from the command line (and inside directories entered)
 
         for argument in c.argv:
-            if file_exists(argument): # user included a file, add it to the file_list for decryption
+            if file_exists(argument):  # user included a file, add it to the file_list for decryption
                 if argument.endswith('.crypt'):
-                    file_list.append(argument) # add .crypt files to the list of files for decryption
+                    file_list.append(argument)  # add .crypt files to the list of files for decryption
                 elif argument.endswith('.gpg'):
                     file_list.append(argument)
                 elif argument.endswith('.asc'):
@@ -84,11 +84,11 @@ def main():
                     # cannot identify as an encrypted file, give it a shot anyways but warn user
                     file_list.append(argument)
                     stdout("Could not confirm that '" + argument + "' is encrypted based upon the file type.  Attempting decryption.  Keep your fingers crossed...")
-            elif dir_exists(argument): # user included a directory, add it to the directory_list
+            elif dir_exists(argument):  # user included a directory, add it to the directory_list
                 directory_list.append(argument)
             else:
                 if argument[0] == "-":
-                    pass # if it is an option, do nothing
+                    pass  # if it is an option, do nothing
                 else:
                     stderr("'" + argument + "' does not appear to be an existing file or directory.  Aborting decryption attempt for this request.")
 
@@ -98,7 +98,7 @@ def main():
                 directory_file_list = list_all_files(directory)
                 for contained_file in directory_file_list:
                     if contained_file.endswith('.crypt'):
-                        file_list.append(make_path(directory, contained_file)) # include the file with a filepath 'directory path/contained_file path'
+                        file_list.append(make_path(directory, contained_file))  # include the file with a filepath 'directory path/contained_file path'
                     elif contained_file.endswith('.gpg'):
                         file_list.append(make_path(directory, contained_file))
                     elif contained_file.endswith('asc'):
@@ -113,7 +113,7 @@ def main():
 
         # get passphrase used to symmetrically decrypt the file
         passphrase = getpass.getpass("Please enter your passphrase: ")
-        if len(passphrase) == 0: # confirm that user entered a passphrase
+        if len(passphrase) == 0:  # confirm that user entered a passphrase
                 stderr("You did not enter a passphrase. Please repeat your command and try again.")
                 sys.exit(1)
         passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
@@ -131,11 +131,11 @@ def main():
                     decrypted_filename = encrypted_file + '.decrypt'  # if it was a file without a known encrypted file type, add the .decrypt suffix
 
                 # determine whether file overwrite will take place with the decrypted file
-                skip_file = False # flag that indicates this file should not be encrypted
+                skip_file = False  # flag that indicates this file should not be encrypted
                 created_tmp_files = False
-                if not use_standard_output: # if not writing a file, no need to check for overwrite
+                if not use_standard_output:  # if not writing a file, no need to check for overwrite
                     if file_exists(decrypted_filename):
-                        if use_file_overwrite: # rename the existing file to temp file which will be erased or replaced (on decryption failures) below
+                        if use_file_overwrite:  # rename the existing file to temp file which will be erased or replaced (on decryption failures) below
                             tmp_filename = decrypted_filename + '.tmp'
                             os.rename(decrypted_filename, tmp_filename)
                             created_tmp_files = True
@@ -151,7 +151,7 @@ def main():
 
                         if not successful_execution:
                             stderr("Unable to decrypt file '" + encrypted_file + "'", 0)
-                            if created_tmp_files: # restore the moved tmp file to original if decrypt failed
+                            if created_tmp_files:  # restore the moved tmp file to original if decrypt failed
                                 tmp_filename = decrypted_filename + '.tmp'
                                 if file_exists(tmp_filename):
                                     os.rename(tmp_filename, decrypted_filename)
@@ -322,7 +322,7 @@ def main():
 
             # prompt for the passphrase
             passphrase = getpass.getpass("Please enter your passphrase: ")
-            if len(passphrase) == 0: # confirm that user entered a passphrase
+            if len(passphrase) == 0:  # confirm that user entered a passphrase
                 stderr("You did not enter a passphrase. Please repeat your command and try again.")
                 sys.exit(1)
             passphrase_confirm = getpass.getpass("Please enter your passphrase again: ")
@@ -330,11 +330,11 @@ def main():
             if passphrase == passphrase_confirm:
                 # decrypt all of the encypted files in the directory
                 for filepath in directory_file_list:
-                    absolute_filepath = make_path(path, filepath) # combine the directory path and file name into absolute path
+                    absolute_filepath = make_path(path, filepath)  # combine the directory path and file name into absolute path
 
                     # remove file suffix from the decrypted file path that writes to disk
                     if absolute_filepath.endswith('.crypt'):
-                        decrypted_filepath = absolute_filepath[0:-6] # remove the .crypt suffix
+                        decrypted_filepath = absolute_filepath[0:-6]  # remove the .crypt suffix
                     elif absolute_filepath.endswith('.gpg') or absolute_filepath.endswith('.pgp') or absolute_filepath.endswith('.asc'):
                         decrypted_filepath = absolute_filepath[0:-4]
 
