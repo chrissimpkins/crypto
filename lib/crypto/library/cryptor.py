@@ -9,6 +9,8 @@ from Naked.toolshed.system import file_size, stdout, stderr
 # Cryptor class
 #   performs gpg encryption of one or more files
 # ------------------------------------------------------------------------------
+
+
 class Cryptor(object):
     """performs gpg encryption of one or more files"""
     def __init__(self, passphrase):
@@ -72,8 +74,8 @@ class Cryptor(object):
                 stderr(response.stderr, 0)
                 stderr("Encryption failed")
                 sys.exit(1)
-        except Exception:
-            stderr("There was a problem with the execution of gpg. Encryption failed")
+        except Exception as e:
+            stderr("There was a problem with the execution of gpg. Encryption failed. Error: [" + str(e) + "]")
             sys.exit(1)
 
     # ------------------------------------------------------------------------------
@@ -125,7 +127,7 @@ class Cryptor(object):
                 return False  # below minimum size to consider compression, do not compress
 
     def _is_common_binary(self, inpath):
-        """compare file path mime type to common binary file types"""
+        """private method to compare file path mime type to common binary file types"""
         # make local variables for the available char numbers in the suffix types to be tested
         two_suffix = inpath[-3:]
         three_suffix = inpath[-4:]
@@ -142,7 +144,7 @@ class Cryptor(object):
             return False
 
     def _is_common_text(self, inpath):
-        """compare file path mime type to common text file types"""
+        """private method to compare file path mime type to common text file types"""
         # make local variables for the available char numbers in the suffix types to be tested
         one_suffix = inpath[-2:]
         two_suffix = inpath[-3:]
