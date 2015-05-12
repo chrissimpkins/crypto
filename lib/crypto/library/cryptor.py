@@ -5,6 +5,8 @@ import sys
 from Naked.toolshed.shell import muterun
 from Naked.toolshed.system import file_size, stdout, stderr
 
+from shellescape import quote
+
 # ------------------------------------------------------------------------------
 # Cryptor class
 #   performs gpg encryption of one or more files
@@ -55,7 +57,7 @@ class Cryptor(object):
                     command_stub = self.command_nocompress
 
         encrypted_outpath = self._create_outfilepath(inpath)
-        system_command = command_stub + encrypted_outpath + " --passphrase '" + self.passphrase + "' --symmetric " + inpath
+        system_command = command_stub + encrypted_outpath + " --passphrase " + quote(self.passphrase) + " --symmetric " + quote(inpath)
 
         try:
             response = muterun(system_command)
@@ -114,7 +116,8 @@ class Cryptor(object):
             if the_file_size > 10240:
                 if the_file_size > 512000:  # seems to be a break point at ~ 500kb where file compression offset by additional file read, so limit tests to files > 500kB
                     try:
-                        response = muterun("file --mime-type -b " + inpath)
+                        system_command = "file --mime-type -b " + quote(inpath)
+                        response = muterun(system_command)
                         if response.stdout[0:5] == "text/":  # check for a text file mime type
                             return True   # appropriate size, appropriate file mime type
                         else:
