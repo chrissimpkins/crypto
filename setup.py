@@ -44,7 +44,7 @@ setup(
     },
     packages=find_packages("lib"),
     package_dir={'': 'lib'},
-    install_requires=['Naked'],
+    install_requires=['Naked', 'shellescape'],
     keywords='encryption,decryption,gpg,pgp,openpgp,cipher,AES256,crypto,cryptography,security,privacy',
     include_package_data=True,
     classifiers=[
