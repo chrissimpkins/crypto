@@ -55,4 +55,5 @@ target/
 # Wing IDE local files (SHOULD commit .wpr files)
 *.wpu
 
+.idea
 workspace.xml
