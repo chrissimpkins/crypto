@@ -19,6 +19,11 @@ class CryptoTarArchiveTest(unittest.TestCase):
         self.pre_tardir2_file_path = "testdir9/tar_dir_two/test.txt"
         self.testdir_good_list = [self.pre_tardir_path]
         self.testdir_good_multidir_list = [self.pre_tardir_path, self.pre_tardir2_path]
+        self.delete_files = [
+            'testdir9/tar_dir.tar.crypt',
+            'testdir9/tar_dir_two.tar.crypt',
+            'testdir9/nontar.txt.crypt'
+        ]
 
         if not dir_exists(self.pre_tardir_path):
             stderr("missing test directory for the CryptoTarArchiveTest in test_tar-archive.py test module", exit=1)
@@ -41,6 +46,11 @@ class CryptoTarArchiveTest(unittest.TestCase):
 
         if file_exists(self.post_tardir_path) or file_exists(self.post_tardir2_path):
             stderr("unable to delete testfile in setup for CryptoTarArchiveTest in the test_tar-archive.py test module", exit=1)
+
+        # remove previously generated encrypted files if still around
+        for the_encypted_file in self.delete_files:
+            if file_exists(the_encypted_file):
+                os.remove(the_encypted_file)
 
     # Tar archive file creation unit tests
     
