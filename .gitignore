@@ -55,5 +55,6 @@ target/
 # Wing IDE local files (SHOULD commit .wpr files)
 *.wpu
 
+# PyCharm settings files
 .idea
 workspace.xml
