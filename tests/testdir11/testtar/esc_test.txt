@@ -1,0 +1,1 @@
+an escape unicode file with escaped $@`!\%^&*()_-+=3'A\\\'M'\W<>?,./|[]{}
