@@ -52,6 +52,14 @@
                     <span class="octicon octicon-link"></span>
                 </a>Changelog</h3>
 
+            <h4>v1.4.1</h4>
+            <ul>
+                <li>Bugfix: shell escape all user entered strings used in shell commands (gpg calls)</li>
+                <li>released a backport of the Python 3.3+ <code>shlex.quote</code> function to handle item 1 for Python 2 and 3 users = <code>shellescape</code> (<a href="https://pypi.python.org/pypi/shellescape">link</a>)</li>
+                <li>added <code>shellescape</code> module as a new crypto dependency</li>
+                <li>minor source formatting changes, including PEP8 compliant formatting updates</li>
+            </ul>
+
              <h4>v1.4.0</h4>
             <ul>
                 <li>create tar archives from entire directories of files prior to encryption with the <code>--tar</code> switch</li>
