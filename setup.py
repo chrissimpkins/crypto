@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 def docs_read(fname):
     return open(os.path.join(os.path.dirname(__file__), 'docs', fname)).read()
 
+
 def version_read():
     settings_file = open(os.path.join(os.path.dirname(__file__), 'lib', 'crypto', 'settings.py')).read()
     major_regex = """major_version\s*?=\s*?["']{1}(\d+)["']{1}"""
@@ -36,7 +37,7 @@ setup(
     author='Christopher Simpkins',
     author_email='git.simpkins@gmail.com',
     platforms=['any'],
-    entry_points = {
+    entry_points={
         'console_scripts': [
             'crypto = crypto.app:main',
             'decrypto = crypto.decryptoapp:main'
