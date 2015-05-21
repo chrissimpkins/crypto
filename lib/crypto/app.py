@@ -153,20 +153,15 @@ def main():
                 the_cryptor = Cryptor(passphrase)
 
                 # run encryption based upon any passed switches
-                if ascii_armored:
-                    if max_compress:
-                        the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=True, armored=True, checksum=report_checksum)
-                    elif no_compress:
-                        the_cryptor.encrypt_files(file_list, force_nocompress=True, force_compress=False, armored=True, checksum=report_checksum)
-                    else:
-                        the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=False, armored=True, checksum=report_checksum)
+
+                # TODO: refactor to use concurrent execution
+
+                if max_compress:
+                    the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=True, armored=ascii_armored, checksum=report_checksum)
+                elif no_compress:
+                    the_cryptor.encrypt_files(file_list, force_nocompress=True, force_compress=False, armored=ascii_armored, checksum=report_checksum)
                 else:
-                    if max_compress:
-                        the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=True, armored=False, checksum=report_checksum)
-                    elif no_compress:
-                        the_cryptor.encrypt_files(file_list, force_nocompress=True, force_compress=False, armored=False, checksum=report_checksum)
-                    else:
-                        the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=False, armored=False, checksum=report_checksum)
+                    the_cryptor.encrypt_files(file_list, force_nocompress=False, force_compress=False, armored=ascii_armored, checksum=report_checksum)
 
                 # overwrite user entered passphrases
                 passphrase = ""
