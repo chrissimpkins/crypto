@@ -2,10 +2,59 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from multiprocessing import Pool, cpu_count
+
 from Naked.toolshed.shell import muterun
 from Naked.toolshed.system import file_size, stdout, stderr
 
 from shellescape import quote
+
+
+def multiprocess_encrypt(file_list, force_nocompress=False, force_compress=False, armored=False, checksum=False):
+    filelist_length = len(file_list)
+    if filelist_length > 1:
+        try:
+            number_processes = cpu_count()  # set number of spawned processes to cpu number
+        except NotImplementedError:
+            number_processes = 4   # default to 4 processes if cpu_count not implemented on OS
+
+        # restrict number of spawned processes to number of requested files if < number_processes set above
+        if number_processes > filelist_length:
+            number_processes == filelist_length
+
+        # determine number of file 'chunks' to send to each subprocess
+        chunk_number = int(round(filelist_length / float(number_processes)))  # Note: keep number_processes a float
+
+        list_of_filelists = _get_process_filelists(file_list, chunk_number, number_processes)
+
+    else:
+        pass  # TODO: implement code for single file encryption, no need to spawn multiple processes
+
+
+def _singleproc_encryption_runner(file_list, force_nocompress, force_compress, armored, checksum):
+    pass
+
+
+def _get_process_filelists(file_list, chunk_number, process_number):
+    list_of_filelists = []
+
+    for x in xrange(process_number):
+        process = x + 1   # starts at 0 so increment process counter for the process count
+        if process == process_number:  # this is the final process that needs to be allotted files, add remaining files
+            pre_offset = x * chunk_number
+            temp_filelist = file_list[pre_offset:]
+            list_of_filelists.append(temp_filelist)
+        else:   # this is not final process, and it needs to be allotted chunk_number of files
+            pre_offset = (x * chunk_number)
+            post_offset = ((x + 1) * chunk_number)
+            temp_filelist = file_list[pre_offset: post_offset]
+            list_of_filelists.append(temp_filelist)
+
+    return list_of_filelists
+
+
+# TODO: add code for multiprocess decryption
+
 
 # ------------------------------------------------------------------------------
 # Cryptor class
