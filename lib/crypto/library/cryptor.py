@@ -2,13 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import itertools
 from multiprocessing import Pool, cpu_count
 
+from crypto.library.response import EncryptionResponse
 from Naked.toolshed.shell import muterun
 from Naked.toolshed.system import file_size, stdout, stderr
-
 from shellescape import quote
 
+
+# TODO: add --singleprocess flag to optionally skip concurrent encryption approach
 
 def multiprocess_encrypt(file_list, force_nocompress=False, force_compress=False, armored=False, checksum=False):
     filelist_length = len(file_list)
@@ -20,15 +23,37 @@ def multiprocess_encrypt(file_list, force_nocompress=False, force_compress=False
 
         # restrict number of spawned processes to number of requested files if < number_processes set above
         if number_processes > filelist_length:
-            number_processes == filelist_length
+            number_processes = filelist_length
 
         # determine number of file 'chunks' to send to each subprocess
         chunk_number = int(round(filelist_length / float(number_processes)))  # Note: keep number_processes a float
 
+        # get the lots of filepaths for each process
         list_of_filelists = _get_process_filelists(file_list, chunk_number, number_processes)
 
+        # create worker pool
+        pool = Pool(number_processes)
+
+        # start the encryption workers
+        list_of_response_lists = pool.map(_singleproc_encryption_runner,
+                                          itertools.izip(list_of_filelists,
+                                                         itertools.repeat(force_nocompress),
+                                                         itertools.repeat(force_compress),
+                                                         itertools.repeat(armored),
+                                                         itertools.repeat(checksum)))
+
+        # create flattened list generator expression from list of lists
+        response_list = (response for sublist in list_of_response_lists for response in sublist)
+
+        for res in response_list:
+            pass  # TODO: write out stdout and stderr messages from the responses
+
+    # single file encryption requests
     else:
-        pass  # TODO: implement code for single file encryption, no need to spawn multiple processes
+        response_list = _singleproc_encryption_runner(file_list, force_nocompress, force_compress, armored, checksum)
+
+        for res in response_list:
+            pass # TODO: write out stdout and stderr messages from the responses
 
 
 def _singleproc_encryption_runner(file_list, force_nocompress, force_compress, armored, checksum):
@@ -84,6 +109,9 @@ class Cryptor(object):
     # ------------------------------------------------------------------------------
     def encrypt_file(self, inpath, force_nocompress=False, force_compress=False, armored=False, checksum=False):
         """public method for single file encryption with optional compression, ASCII armored formatting, and file hash digest generation"""
+
+        file_response = EncryptionResponse()  # per file response object that is returned to calling code
+
         if armored:
             if force_compress:
                 command_stub = self.command_maxcompress_armored
@@ -106,28 +134,45 @@ class Cryptor(object):
                     command_stub = self.command_nocompress
 
         encrypted_outpath = self._create_outfilepath(inpath)
+
+        # set in and out file paths in response
+        file_response.file_inpath = inpath
+        file_response.file_outpath = encrypted_outpath
+
         system_command = command_stub + encrypted_outpath + " --passphrase " + quote(self.passphrase) + " --symmetric " + quote(inpath)
 
         try:
             response = muterun(system_command)
             # check returned status code
             if response.exitcode == 0:
-                stdout(encrypted_outpath + " was generated from " + inpath)
-                if checksum:  # add a SHA256 hash digest of the encrypted file - requested by user --hash flag in command
+                # set success flag in response
+                file_response.encryption_success = True
+                # set user response message
+                file_response.encryption_message = encrypted_outpath + " was generated from " + inpath
+
+                if checksum:  # add a SHA256 hash digest of the encrypted file - requested by --hash flag in command
+                    # set hash digest request indicator on response
+                    file_response.hash_request = True
+                    # create hash digest
                     from crypto.library import hash
                     encrypted_file_hash = hash.generate_hash(encrypted_outpath)
                     if len(encrypted_file_hash) == 64:
-                        stdout("SHA256 hash digest for " + encrypted_outpath + " :")
-                        stdout(encrypted_file_hash)
+                        # set hash digest success indicator on response
+                        file_response.hash_success = True
+                        file_response.hash_digest = encrypted_file_hash
                     else:
-                        stdout("Unable to generate a SHA256 hash digest for the file " + encrypted_outpath)
+                        file_response.hash_success = False
             else:
-                stderr(response.stderr, 0)
-                stderr("Encryption failed")
-                sys.exit(1)
+                file_response.encryption_success = False
+                file_response.error_occurred = True
+                file_response.error_message = response.stderr
         except Exception as e:
-            stderr("There was a problem with the execution of gpg. Encryption failed. Error: [" + str(e) + "]")
-            sys.exit(1)
+            file_response.encryption_success = False
+            file_response.error_occurred = True
+            file_response.error_message = str(e)
+
+        # return the file_response object to the calling code
+        return file_response
 
     # ------------------------------------------------------------------------------
     # encrypt_files : multiple file encryption
