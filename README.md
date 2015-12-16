@@ -1,4 +1,4 @@
-# crypto  [![Current Version](https://pypip.in/version/crypto/badge.svg?text=version&style=flat)](https://pypi.python.org/pypi/crypto/) [![License](https://pypip.in/license/crypto/badge.svg?style=flat)](https://github.com/chrissimpkins/crypto/blob/master/docs/LICENSE)
+# crypto
 
 ## Simple symmetric GPG file encryption and decryption
 
